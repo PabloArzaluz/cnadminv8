@@ -1,4 +1,5 @@
 <?php
+/*
 function Conecta(){
 	require("config.inc.php");
 	$Conexion = mysql_connect($dbhost,$dbuser,$dbpass);
@@ -14,5 +15,5 @@ function desconectar_bd(){
 	$Conexion = mysql_connect($dbhost,$dbuser,$dbpass); 
 	mysql_close();
 }
-	
+*/
 ?>
