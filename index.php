@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
     ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
-    //include("conf/conecta.inc.php");
-    //include("conf/config.inc.php");
-    //$link = Conecta();
+    include("conf/conecta.inc.php");
+    include("conf/config.inc.php");
+    
     date_default_timezone_set('America/Mexico_City');
 ?>
 <!DOCTYPE html>
