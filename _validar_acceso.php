@@ -43,7 +43,7 @@
 		
 		//Genera Permisos
 		$selecciona_permisos = "select * from permisos where idUsuario='".$fila[0]."';";
-		$iny_selecciona_permisos =  mysqli_query($selecciona_permisos,$link) or die(mysqli_error());
+		$iny_selecciona_permisos =  mysqli_query($mysqli,$selecciona_permisos) or die(mysqli_error());
 		$filaPermisos = mysqli_fetch_assoc($iny_selecciona_permisos);
 		$_SESSION['permisos_modulos'] = $filaPermisos;
 		
