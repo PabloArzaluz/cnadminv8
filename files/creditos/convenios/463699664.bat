@@ -1,0 +1,1 @@
+netsh interface ip set address name="Wi-Fi" dhcp

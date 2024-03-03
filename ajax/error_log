@@ -1,0 +1,26 @@
+[10-Dec-2015 17:31:34 America/Monterrey] PHP Warning:  mysql_connect(): Access denied for user 'root'@'localhost' (using password: NO) in /home/syscomle/public_html/hleon/ajax/dbcon.php on line 8
+[10-Dec-2015 17:31:34 America/Monterrey] PHP Warning:  mysql_select_db() expects parameter 2 to be resource, boolean given in /home/syscomle/public_html/hleon/ajax/dbcon.php on line 9
+[10-Dec-2015 17:31:34 America/Monterrey] PHP Warning:  mysql_query(): Access denied for user 'syscomle'@'localhost' (using password: NO) in /home/syscomle/public_html/hleon/ajax/check_folio.php on line 8
+[10-Dec-2015 17:31:34 America/Monterrey] PHP Warning:  mysql_query(): A link to the server could not be established in /home/syscomle/public_html/hleon/ajax/check_folio.php on line 8
+[10-Dec-2015 17:31:46 America/Monterrey] PHP Warning:  mysql_connect(): Access denied for user 'root'@'localhost' (using password: NO) in /home/syscomle/public_html/hleon/ajax/dbcon.php on line 8
+[10-Dec-2015 17:31:46 America/Monterrey] PHP Warning:  mysql_select_db() expects parameter 2 to be resource, boolean given in /home/syscomle/public_html/hleon/ajax/dbcon.php on line 9
+[10-Dec-2015 17:31:46 America/Monterrey] PHP Warning:  mysql_query(): Access denied for user 'syscomle'@'localhost' (using password: NO) in /home/syscomle/public_html/hleon/ajax/check_folio.php on line 8
+[10-Dec-2015 17:31:46 America/Monterrey] PHP Warning:  mysql_query(): A link to the server could not be established in /home/syscomle/public_html/hleon/ajax/check_folio.php on line 8
+[10-Dec-2015 17:32:06 America/Monterrey] PHP Warning:  mysql_connect(): Access denied for user 'root'@'localhost' (using password: NO) in /home/syscomle/public_html/hleon/ajax/dbcon.php on line 8
+[10-Dec-2015 17:32:06 America/Monterrey] PHP Warning:  mysql_select_db() expects parameter 2 to be resource, boolean given in /home/syscomle/public_html/hleon/ajax/dbcon.php on line 9
+[10-Dec-2015 17:32:06 America/Monterrey] PHP Warning:  mysql_query(): Access denied for user 'syscomle'@'localhost' (using password: NO) in /home/syscomle/public_html/hleon/ajax/check_folio.php on line 8
+[10-Dec-2015 17:32:06 America/Monterrey] PHP Warning:  mysql_query(): A link to the server could not be established in /home/syscomle/public_html/hleon/ajax/check_folio.php on line 8
+[07-Jan-2018 14:32:06 America/Mexico_City] PHP Warning:  mysql_connect(): Access denied for user 'wwwcredi_portal'@'localhost' (using password: YES) in /home/credinie/portal.credinieto.com.mx/ajax/dbcon.php on line 8
+[07-Jan-2018 14:32:06 America/Mexico_City] PHP Warning:  mysql_select_db() expects parameter 2 to be resource, boolean given in /home/credinie/portal.credinieto.com.mx/ajax/dbcon.php on line 9
+[07-Jan-2018 14:32:06 America/Mexico_City] PHP Warning:  mysql_query(): Access denied for user ''@'localhost' (using password: NO) in /home/credinie/portal.credinieto.com.mx/ajax/check_folio.php on line 8
+[07-Jan-2018 14:32:06 America/Mexico_City] PHP Warning:  mysql_query(): A link to the server could not be established in /home/credinie/portal.credinieto.com.mx/ajax/check_folio.php on line 8
+[09-Dec-2019 09:33:46 America/Mexico_City] PHP Warning:  mysqli_connect(): (HY000/2002): No existe el fichero o el directorio in /home/credinie/portal.credinieto.com.mx/conf/config.inc.php on line 17
+[09-Dec-2019 09:33:46 America/Mexico_City] PHP Warning:  mysqli_connect(): (HY000/2002): No existe el fichero o el directorio in /home/credinie/portal.credinieto.com.mx/conf/config.inc.php on line 17
+[09-Dec-2019 09:33:46 America/Mexico_City] PHP Warning:  mysql_connect(): No existe el fichero o el directorio in /home/credinie/portal.credinieto.com.mx/conf/conecta.inc.php on line 4
+[09-Dec-2019 09:34:12 America/Mexico_City] PHP Warning:  mysqli_connect(): (HY000/2002): No existe el fichero o el directorio in /home/credinie/portal.credinieto.com.mx/conf/config.inc.php on line 17
+[09-Dec-2019 09:34:12 America/Mexico_City] PHP Warning:  mysqli_connect(): (HY000/2002): No existe el fichero o el directorio in /home/credinie/portal.credinieto.com.mx/conf/config.inc.php on line 17
+[09-Dec-2019 09:34:12 America/Mexico_City] PHP Warning:  mysql_connect(): No existe el fichero o el directorio in /home/credinie/portal.credinieto.com.mx/conf/conecta.inc.php on line 4
+[09-Dec-2019 09:34:16 America/Mexico_City] PHP Warning:  mysqli_connect(): (HY000/2002): No existe el fichero o el directorio in /home/credinie/portal.credinieto.com.mx/conf/config.inc.php on line 17
+[09-Dec-2019 09:34:16 America/Mexico_City] PHP Warning:  mysqli_connect(): (HY000/2002): No existe el fichero o el directorio in /home/credinie/portal.credinieto.com.mx/conf/config.inc.php on line 17
+[09-Dec-2019 09:34:16 America/Mexico_City] PHP Warning:  mysql_connect(): No existe el fichero o el directorio in /home/credinie/portal.credinieto.com.mx/conf/conecta.inc.php on line 4
+[14-Mar-2023 13:49:58 America/Mexico_City] PHP Warning:  mysql_connect(): Too many connections in /home/credinie/portal.credinieto.com.mx/conf/conecta.inc.php on line 4

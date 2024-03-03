@@ -1,0 +1,19 @@
+<?php
+	//Funcion para mostrar tipo de cliente
+	function categoriaClienteHTML($categoriaCliente){
+		//Devolver HTML de Cliente
+		if($categoriaCliente == ""){
+			$cadena = "";
+		}
+		if($categoriaCliente == '0'){ // Es clasico
+			$cadena = $categoriaCliente." <i style='color:#bababa;' class='fa fa-leaf'> Clasico</i>";
+		}
+		if($categoriaCliente == 1 ){ // Es Dorado
+			$cadena = " <i style='color:#CBBF00;' class='fa fa-fire'> Dorado</i>";
+		}
+		if($categoriaCliente == 2 ){ // Es Premium
+			$cadena = " <i style='color:#2a2a2a;' class='fa fa-certificate'> Premium</i>";
+		}
+		echo $cadena;
+	}
+?>
