@@ -2,9 +2,9 @@
 
 	//Conexion A Servidor Remoto
 	$dbhost="localhost";
-	$dbuser="credinie_portalu";
-	$dbpass="sZ;ZcC&XlfAv";
-	$dbname="credinie_portal_sl";
+	$dbuser="root";
+	$dbpass="Qw3rty2024%#";
+	$dbname="cn_prtl_sl";
 /*
 	//Conexion A Servidor Local
 	$dbhost="localhost";
