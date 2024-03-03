@@ -1,11 +1,11 @@
 <?php
 	session_start(); // crea una sesion
 	error_reporting(E_ALL); ini_set("display_errors", 1);
-	//ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -62,8 +62,8 @@
                                    	$dia4 = date('d', strtotime($fecha_actual . ' +2 day'));
                                    	$diasegundo = date('d', strtotime($fecha_actual . ' +1 day'));
                                     $conocer_monto_a_cobrar_hoy = "select sum(pago_mensual) from creditos where day(fecha_prestamo)='$dia' and status=1;";
-                                    $iny_conocer_monto_a_cobrar_hoy = mysql_query($conocer_monto_a_cobrar_hoy,$link) or die(mysql_error());
-                                    $row_monto_cobrar_hoy = mysql_fetch_row($iny_conocer_monto_a_cobrar_hoy);
+                                    $iny_conocer_monto_a_cobrar_hoy = mysqli_query($mysqli,$conocer_monto_a_cobrar_hoy) or die(mysqli_error());
+                                    $row_monto_cobrar_hoy = mysqli_fetch_row($iny_conocer_monto_a_cobrar_hoy);
 
                                     if($row_monto_cobrar_hoy[0] != ""){
                                         $monto_total_hoy = $row_monto_cobrar_hoy[0];
@@ -74,8 +74,8 @@
                                     //Cobrado Actualmente
 
                                     $conocer_cobrado_hoy = "select sum(monto) from pagos where day(fecha_captura)='$dia' and month(fecha_captura)='$mes' and year(fecha_captura)='$ano' and tipo_pago='1';";
-                                    $iny_conocer_cobrado = mysql_query($conocer_cobrado_hoy,$link) or die(mysql_error());
-                                    $row_monto_cobrado = mysql_fetch_row($iny_conocer_cobrado);
+                                    $iny_conocer_cobrado = mysqli_query($mysqli,$conocer_cobrado_hoy) or die(mysqli_error());
+                                    $row_monto_cobrado = mysqli_fetch_row($iny_conocer_cobrado);
                                     if($row_monto_cobrado[0] != ""){
                                         $monto_cobrado = $row_monto_cobrado[0];
                                     }else{
@@ -85,8 +85,8 @@
                                     //Cobrado en el Mes de Intereses
                                     $mes = date("m");
                                     $conocer_cobrado_mes_intereses = "select sum(monto) from pagos where month(fecha_captura)='$mes' and year(fecha_captura)='$ano'and tipo_pago='1';";
-                                    $iny_conocer_cobrado_mes_intereses = mysql_query($conocer_cobrado_mes_intereses,$link) or die(mysql_error());
-                                    $row_monto_cobrado_mes_intereses = mysql_fetch_row($iny_conocer_cobrado_mes_intereses);
+                                    $iny_conocer_cobrado_mes_intereses = mysqli_query($mysqli,$conocer_cobrado_mes_intereses) or die(mysqli_error());
+                                    $row_monto_cobrado_mes_intereses = mysqli_fetch_row($iny_conocer_cobrado_mes_intereses);
                                     if($row_monto_cobrado_mes_intereses[0] != ""){
                                         $monto_cobrado_mes_intereses = $row_monto_cobrado_mes_intereses[0];
                                     }else{
@@ -96,8 +96,8 @@
                                      //Cobrado en el Mes de Capital
 
                                     $conocer_cobrado_mes_capital = "select sum(monto) from pagos where month(fecha_captura)='$mes' and year(fecha_captura)='$ano'and tipo_pago='2';";
-                                    $iny_conocer_cobrado_mes_capital = mysql_query($conocer_cobrado_mes_capital,$link) or die(mysql_error());
-                                    $row_monto_cobrado_mes_capital = mysql_fetch_row($iny_conocer_cobrado_mes_capital);
+                                    $iny_conocer_cobrado_mes_capital = mysqli_query($mysqli,$conocer_cobrado_mes_capital) or die(mysqli_error());
+                                    $row_monto_cobrado_mes_capital = mysqli_fetch_row($iny_conocer_cobrado_mes_capital);
                                     if($row_monto_cobrado_mes_capital[0] != ""){
                                         $monto_cobrado_mes_capital = $row_monto_cobrado_mes_capital[0];
                                     }else{
@@ -145,8 +145,8 @@
 									$monthName = $dateObj->format('F'); // March
 									
 									$qry_ConocerCreditosColocados = "SELECT sum(MONTO) FROM creditos WHERE MONTH(fecha_captura) = '$mesActual' and year(fecha_captura) = '$anioActual';";
-									$iny_conocer_colocados_mes_actual = mysql_query($qry_ConocerCreditosColocados,$link) or die(mysql_error());
-									$row_conocer_colocados_mes_actual = mysql_fetch_row($iny_conocer_colocados_mes_actual);
+									$iny_conocer_colocados_mes_actual = mysqli_query($mysqli,$qry_ConocerCreditosColocados) or die(mysqli_error());
+									$row_conocer_colocados_mes_actual = mysqli_fetch_row($iny_conocer_colocados_mes_actual);
 								?>
 								<span class="inv-green"><strong>$ <?php echo number_format(($row_conocer_colocados_mes_actual[0]),2); ?></strong> <i class="fa fa-caret-up"></i></span>
 								
@@ -188,7 +188,7 @@
 						(DAY(fecha_prestamo) = '$dia4') and creditos.status = 1 OR
 						(DAY(fecha_prestamo) = '$diasegundo') and creditos.status = 1
                         order by fecha_prestamo asc;";
-                        $iny_conocer_proximos_pagos = mysql_query($conocer_proximos_pagos,$link) or die(mysql_error());
+                        $iny_conocer_proximos_pagos = mysqli_query($mysqli,$conocer_proximos_pagos) or die(mysqli_error());
 
                     ?>
 					<div class="row bottom-60px">
@@ -206,8 +206,8 @@
 								</thead>
 								<tbody>
                                 <?php
-                                    if(mysql_num_rows($iny_conocer_proximos_pagos) > 0){
-							              while($row_proximos_pagos = mysql_fetch_array($iny_conocer_proximos_pagos)){
+                                    if(mysqli_num_rows($iny_conocer_proximos_pagos) > 0){
+							              while($row_proximos_pagos = mysqli_fetch_array($iny_conocer_proximos_pagos)){
                                             echo "<tr>
 
                                                     <td><a href='detalle-credito.php?id=$row_proximos_pagos[0]'>[#$row_proximos_pagos[9]]</a></td>
@@ -216,8 +216,8 @@
 													categoriaClienteHTML($row_proximos_pagos[10]);
 													echo"</td>";
                                                     $conocerSaldoRestante = "SELECT sum(monto) from pagos where id_credito= $row_proximos_pagos[0] and tipo_pago= 2;";
-		                                            $iny_conocerSaldoRestante = mysql_query($conocerSaldoRestante,$link) or die(mysql_error());
-						                            $fSaldoRestante = mysql_fetch_row($iny_conocerSaldoRestante);
+		                                            $iny_conocerSaldoRestante = mysqli_query($mysqli,$conocerSaldoRestante) or die(mysqli_error());
+						                            $fSaldoRestante = mysqli_fetch_row($iny_conocerSaldoRestante);
 						                            $saldoRestante = $row_proximos_pagos[6] - $fSaldoRestante[0];
 
                                                     echo "<td><span title='Monto Credito: $ ".number_format(($row_proximos_pagos[6]),2)."' class='top' data-toggle='tooltip'>$ ".number_format(($saldoRestante),2)."</span></td>
@@ -257,11 +257,11 @@
                                 				and creditos.status = 1
                                 				order by fecha_prestamo desc;
                                 	";
-	                               	$iny_conocer_morosos = mysql_query($conocer_morosos,$link) or die(mysql_error());
+	                               	$iny_conocer_morosos = mysqli_query($mysqli,$conocer_morosos) or die(mysqli_error());
 
-                                	if(mysql_num_rows($iny_conocer_morosos) > 0){
+                                	if(mysqli_num_rows($iny_conocer_morosos) > 0){
                                 		echo "<tr><td colspan='6'><center><h4>Pagos Rezagados</h4></center></td></tr>";
-						          		while($row_morosos = mysql_fetch_array($iny_conocer_morosos)){
+						          		while($row_morosos = mysqli_fetch_array($iny_conocer_morosos)){
 						          			$fechaInicialCredito = date('Y-m', strtotime($row_morosos[4]));
 						          			$fechaCorriendoActual = "01-".$mes."-".$ano;
 						          			$fechaCorriendo = date('Y-m', strtotime($fechaCorriendoActual));
@@ -276,8 +276,8 @@
 													categoriaClienteHTML($row_morosos[10]);
 													echo"</td>";
 				                        			$conocerSaldoRestanteMorosos = "SELECT sum(monto) from pagos where id_credito= $row_morosos[0] and tipo_pago= 2;";
-		                                            $iny_conocerSaldoRestanteMorosos = mysql_query($conocerSaldoRestanteMorosos,$link) or die(mysql_error());
-						                            $fSaldoRestanteMorosos = mysql_fetch_row($iny_conocerSaldoRestanteMorosos);
+		                                            $iny_conocerSaldoRestanteMorosos = mysqli_query($mysqli,$conocerSaldoRestanteMorosos) or die(mysqli_error());
+						                            $fSaldoRestanteMorosos = mysqli_fetch_row($iny_conocerSaldoRestanteMorosos);
 						                            $saldoRestanteMorosos = $row_morosos[6] - $fSaldoRestanteMorosos[0];
 
                                                     echo "<td><span title='Monto Credito: $ ".number_format(($row_morosos[6]),2)."' class='top' data-toggle='tooltip'>$ ".number_format(($saldoRestanteMorosos),2)."</span></td>
@@ -331,15 +331,15 @@
                                 				and creditos.status = 1
                                 				order by fecha_prestamo desc;
                                 	";
-                                	$iny_conocer_morosos_anteriores = mysql_query($conocer_morosos_anteriores,$link) or die(mysql_error());
-                                	if(mysql_num_rows($iny_conocer_morosos_anteriores) > 0){
+                                	$iny_conocer_morosos_anteriores = mysqli_query($mysqli,$conocer_morosos_anteriores) or die(mysqli_error());
+                                	if(mysqli_num_rows($iny_conocer_morosos_anteriores) > 0){
 
                                 		echo "<tr><td colspan='6'>";
 
                                 		$formateofecha = date_format($fechaTermina, 'Y-m-d');
 
                                 		echo "<center><h4>Pagos Rezagados (".strftime('%B del %Y',strtotime($formateofecha)).")</h4></center></td></tr>";
-						          		while($row_morosos_anteriores = mysql_fetch_array($iny_conocer_morosos_anteriores)){
+						          		while($row_morosos_anteriores = mysqli_fetch_array($iny_conocer_morosos_anteriores)){
 						          			$fechaInicialCredito = date('Y-m-d', strtotime($row_morosos_anteriores[4]));
 						          			$fechaCorriendo = date('Y-m-d', strtotime(date_format($fechaTermina, 'd-m-Y')));
 
@@ -352,8 +352,8 @@
 													categoriaClienteHTML($row_morosos_anteriores[10]);
 													echo"</td>";
 				                        			$conocerSaldoRestanteMorososAnteriores = "SELECT sum(monto) from pagos where id_credito= $row_morosos_anteriores[0] and tipo_pago= 2;";
-		                                            $iny_conocerSaldoRestanteMorososAnteriores = mysql_query($conocerSaldoRestanteMorososAnteriores,$link) or die(mysql_error());
-						                            $fSaldoRestanteMorososAnteriores = mysql_fetch_row($iny_conocerSaldoRestanteMorososAnteriores);
+		                                            $iny_conocerSaldoRestanteMorososAnteriores = mysqli_query($mysqli,$conocerSaldoRestanteMorososAnteriores) or die(mysqli_error());
+						                            $fSaldoRestanteMorososAnteriores = mysqli_fetch_row($iny_conocerSaldoRestanteMorososAnteriores);
 						                            $saldoRestanteMorososAnteriores = $row_morosos_anteriores[6] - $fSaldoRestanteMorososAnteriores[0];
 
                                                     echo "<td><span title='Monto Credito: $ ".number_format(($row_morosos_anteriores[6]),2)."' class='top' data-toggle='tooltip'>$ ".number_format(($saldoRestanteMorososAnteriores),2)."</span></td>
