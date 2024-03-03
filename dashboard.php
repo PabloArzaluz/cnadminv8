@@ -148,7 +148,7 @@
 									$iny_conocer_colocados_mes_actual = mysqli_query($mysqli,$qry_ConocerCreditosColocados) or die(mysqli_error());
 									$row_conocer_colocados_mes_actual = mysqli_fetch_row($iny_conocer_colocados_mes_actual);
 								?>
-								<span class="inv-green"><strong>$ <?php echo number_format(($row_conocer_colocados_mes_actual[0]),2); ?></strong> <i class="fa fa-caret-up"></i></span>
+								<span class="inv-green"><strong>$ <?php echo number_format($row_conocer_colocados_mes_actual[0],2); ?></strong> <i class="fa fa-caret-up"></i></span>
 								
 							</div>
 
