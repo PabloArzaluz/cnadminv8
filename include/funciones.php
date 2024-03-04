@@ -30,7 +30,7 @@
                 creditos.id_cliente = clientes.id_clientes
                 where creditos.id_creditos = '".strtolower($credito)."' and (creditos.status = 1 OR creditos.status =3 OR creditos.status =4 OR creditos.status =2 );
             ";
-			$results = mysqi_query($mysqli,$query) or die(mysqli_error());
+			$results = mysqli_query($mysqli,$query) or die(mysqli_error());
 			$fCredito = mysqli_fetch_row($results);
 
 			$TotalPagosCapital = "SELECT sum(monto) from pagos where id_credito= ".$credito." and tipo_pago= 2;";
