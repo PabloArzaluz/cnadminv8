@@ -101,7 +101,8 @@ if($_REQUEST)
 			$monto_a_pagar = ($sumaSaldoTotal /100) * $interesMoratorio;
 		}
 
-		echo '	<tr><td><strong>Fecha Limite de Pago</strong></td><td>'.strftime('%A,  %d de %B del %Y',strtotime($fechaLimitePago)).'</td></tr>';
+		echo '	<tr><td><strong>Fecha Limite de Pago</strong></td><td>'.date('l d F Y',strtotime($fechaLimitePago)).'</td></tr>';
+		//echo '	<tr><td><strong>Fecha Limite de Pago</strong></td><td>'.strftime('%A,  %d de %B del %Y',strtotime($fechaLimitePago)).'</td></tr>'; --deprecated
 
 		echo "<tr><td><strong>Meses con Adeudos</strong></td><td>";
         //Conocer Meses transcurridos
