@@ -233,7 +233,8 @@
 													<thead><th>Fecha</th><th>Monto</th></thead><tbody>
 														";
                                         			while($fpagosInversionista = mysqli_fetch_array($iny_conocer_pagos_inversionista)){
-														echo "<tr><td><span data-toggle='tooltip' title='".strftime('%A,  %d de %B del %Y',strtotime($fpagosInversionista[5]))."'>".date("d/m/Y",strtotime($fpagosInversionista[5]))."</span></td><td>$".number_format(($fpagosInversionista[3]),2)."</td></tr>";
+														echo "<tr><td><span data-toggle='tooltip' title='".date('l  d F Y',strtotime($fpagosInversionista[5]))."'>".date("d/m/Y",strtotime($fpagosInversionista[5]))."</span></td><td>$".number_format(($fpagosInversionista[3]),2)."</td></tr>";
+														//echo "<tr><td><span data-toggle='tooltip' title='".strftime('%A,  %d de %B del %Y',strtotime($fpagosInversionista[5]))."'>".date("d/m/Y",strtotime($fpagosInversionista[5]))."</span></td><td>$".number_format(($fpagosInversionista[3]),2)."</td></tr>";
 														$acumuladopagos += $fpagosInversionista[3];
 													}
 													echo "</tbody></table>";

@@ -132,7 +132,9 @@ ON
                                                 echo "<span class='label label-success'>Activo</span>";
                                             }
                                               if($row[5]== 2){
-                                                  echo "<span class='label label-default'>Finalizado (".date("d/m/Y",strtotime($row[11])).")</span>";
+													
+                                                  echo "<span class='label label-default'>Finalizado (".date("d/m/Y",strtotime($row[11] ?? '0000/00/00') ).")</span>";
+												  //echo "<span class='label label-default'>Finalizado (".date("d/m/Y",strtotime($row[11])).")</span>"; --deprecated
                                               }
                                               if($row[5] == 3){
                                                   echo "<span class='label label-danger'>En Juridico</span>";
