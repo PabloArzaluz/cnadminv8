@@ -4,7 +4,7 @@
 	date_default_timezone_set('America/Mexico_City');
 	$fecha = date("Y-m-d");
   	$hora = date("G:i:s");
-	include("../conf/config.inc.php");
+	
 
   	//Muestra la cantidad que resta a pagar para un credito
   	function conocer_monto_deudor($credito) {
