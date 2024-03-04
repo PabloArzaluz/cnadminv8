@@ -1,11 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
 	include("include/funciones.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	setlocale(LC_ALL, 'es_MX.UTF-8');
 	if(!isset($_SESSION['id_usuario'])){
@@ -61,9 +61,9 @@
 			var calo= id;
 			
 			<?php
-				$conocer_en_juridico = mysql_query("select id_creditos from creditos where status=3;",$link) or die(mysql_error());
+				$conocer_en_juridico = mysqli_query($mysqli,"select id_creditos from creditos where status=3;") or die(mysqli_error());
 				echo "var myArr = [";
-				while ($fila_juridico_conocer = mysql_fetch_array($conocer_en_juridico)) {
+				while ($fila_juridico_conocer = mysqli_fetch_array($conocer_en_juridico)) {
 					echo "'$fila_juridico_conocer[0]',";
 				}
 					echo "];";
@@ -284,8 +284,8 @@
 								foreach($_SESSION['arrayEliminados'] as $value){
 									//Consultar cada valor de cada creditos
 									$q_conocerDatosdeCreditosElimiandos = "SELECT id_creditos,folio, nombres, apaterno, amaterno FROM creditos INNER JOIN clientes ON clientes.id_clientes = creditos.id_cliente WHERE creditos.id_creditos =  $value";
-									$i_conocerDatosdeCreditosElimiandos = mysql_query($q_conocerDatosdeCreditosElimiandos,$link) or die(mysql_error());
-									$r_conocerDatosdeCreditosElimiandos = mysql_fetch_assoc($i_conocerDatosdeCreditosElimiandos);
+									$i_conocerDatosdeCreditosElimiandos = mysqli_query($mysqli,$q_conocerDatosdeCreditosElimiandos) or die(mysqli_error());
+									$r_conocerDatosdeCreditosElimiandos = mysqli_fetch_assoc($i_conocerDatosdeCreditosElimiandos);
 									echo $r_conocerDatosdeCreditosElimiandos['folio']." - ".$r_conocerDatosdeCreditosElimiandos['nombres']." ".$r_conocerDatosdeCreditosElimiandos['apaterno']." ".$r_conocerDatosdeCreditosElimiandos['amaterno']."<br>";
 								}
 								//echo (count($_SESSION['arrayEliminados']) > 0 ? implode(",", $_SESSION['arrayEliminados']):0);
@@ -365,9 +365,9 @@
 							 }
 							  
 							$_SESSION['consultaactual'] = $consulta;
-							$iny_consulta = mysql_query($consulta,$link) or die (mysql_error());
+							$iny_consulta = mysqli_query($mysqli,$consulta) or die (mysqli_error());
 							
-							if(mysql_num_rows($iny_consulta) > 0){
+							if(mysqli_num_rows($iny_consulta) > 0){
 								echo '
 								<div class="widget widget-table">
 								<div class="widget-header">
@@ -403,7 +403,7 @@
 								$total_importe_pagado = 0;
 								$total_interes_inversionista = 0;
 								$total_sobrante = 0;
-								while($row = mysql_fetch_row($iny_consulta)){
+								while($row = mysqli_fetch_row($iny_consulta)){
 									$saldo_credito = conocer_monto_deudor($row[0]);
 									$total_monto_prestamo += $saldo_credito;
 									$total_importe_a_pagar += $row[6];
@@ -434,9 +434,9 @@
 									//Conocer El total del monto de los pagos correspondientes a el mes en curso
 									$conocer_total_pagos = "SELECT * FROM pagos WHERE id_credito = '$row[0]' AND MONTH(fecha_pago)='".$mesFechaPago."' AND YEAR(fecha_pago) = '".$anioFechaPago."' and tipo_pago=1;";
 									
-									$iny_conocer_total_pagos = mysql_query($conocer_total_pagos,$link) or die (mysql_error());
-									$cantidad_pagos = mysql_num_rows($iny_conocer_total_pagos);
-									$filaPagos = mysql_fetch_row($iny_conocer_total_pagos);
+									$iny_conocer_total_pagos = mysqli_query($mysqli,$conocer_total_pagos) or die (mysqli_error());
+									$cantidad_pagos = mysqli_num_rows($iny_conocer_total_pagos);
+									$filaPagos = mysqli_fetch_row($iny_conocer_total_pagos);
 
 									
 									
@@ -454,8 +454,8 @@
 									if(!empty($filaPagos[5])){
 										
 										$conocerTotalSumarPagos = "SELECT SUM(MONTO) FROM pagos where id_credito = '$row[0]' AND MONTH(fecha_pago)='".$mesFechaPago."' AND YEAR(fecha_pago) = '".$anioFechaPago."' and tipo_pago=1;";
-										$fSumaPagos = mysql_query($conocerTotalSumarPagos,$link) or die (mysql_error());
-										$RowPagosSuma = mysql_fetch_row($fSumaPagos);
+										$fSumaPagos = mysqli_query($mysqli,$conocerTotalSumarPagos) or die (mysqli_error());
+										$RowPagosSuma = mysqli_fetch_row($fSumaPagos);
 										$totalPagos += $RowPagosSuma[0];
 											if($cantidad_pagos > 1 ){
 												$htmlprint .= "<td>$".number_format($RowPagosSuma[0], 2, '.', ',')."</td>";

@@ -1,11 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
     date_default_timezone_set('America/Mexico_City');
-	$link = Conecta();
+	
 	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -99,8 +99,8 @@
                     <?php
                         $id_inversionista = $_GET['id'];
                         $consultar_inversionista = "select * from inversionistas where id_inversionistas = '$id_inversionista';";
-                        $iny_consultar_inversionista = mysql_query($consultar_inversionista, $link) or die (mysql_error());
-                        $fila_inversionista = mysql_fetch_row($iny_consultar_inversionista);
+                        $iny_consultar_inversionista = mysqli_query($mysqli,$consultar_inversionista) or die (mysqli_error());
+                        $fila_inversionista = mysqli_fetch_row($iny_consultar_inversionista);
                     ?>
 				<div class="main-content">
 					<!-- WIDGET WITH DROPDOWN -->
@@ -127,8 +127,8 @@
 						</div>
 						<?php 
 							//Consultar Creditos
-							$conocer_total_creditos = mysql_query("select count(id_inversionista) from creditos where id_inversionista=$id_inversionista;",$link) or die(mysql_error());
-							$cantidad_creditos = mysql_fetch_row($conocer_total_creditos);
+							$conocer_total_creditos = mysqli_query($mysqli,"select count(id_inversionista) from creditos where id_inversionista=$id_inversionista;") or die(mysqli_error());
+							$cantidad_creditos = mysqli_fetch_row($conocer_total_creditos);
 						
 						?>
 						<div class="widget-content">
@@ -149,13 +149,13 @@
 									
 									<!-- CONOCER INFORMACION DE CREDITOS -->
 									<?php
-										$creditos_asociados = mysql_query("select * from creditos where id_inversionista=$id_inversionista ORDER BY folio desc	;",$link) or die(mysql_error());
+										$creditos_asociados = mysqli_query($mysqli,"select * from creditos where id_inversionista=$id_inversionista ORDER BY folio desc	;") or die(mysqli_error());
 										$SaldoRestanteCreditos = 0;
-										if(mysql_num_rows($creditos_asociados)>0){
-                                        	while($fCreditos = mysql_fetch_array($creditos_asociados)){
+										if(mysqli_num_rows($creditos_asociados)>0){
+                                        	while($fCreditos = mysqli_fetch_array($creditos_asociados)){
 												
-												$conocer_informacion_cliente = mysql_query("select * from clientes where id_clientes = $fCreditos[1];",$link) or die(mysql_error());
-												$fCliente = mysql_fetch_row($conocer_informacion_cliente);
+												$conocer_informacion_cliente = mysqli_query($mysqli,"select * from clientes where id_clientes = $fCreditos[1];") or die(mysqli_error());
+												$fCliente = mysqli_fetch_row($conocer_informacion_cliente);
 												
 												echo "<table style='width:100%;'>
 														<tr style='border-bottom:1px solid #778899;'>
@@ -182,13 +182,13 @@
 												echo "<div class='row'>
 														<div class='col-xs-6'>";
 												$conocer_pagos_inversionista = "select * from pinversionistas where id_credito = $fCreditos[0] AND tipo_pago='interes';";
-												$iny_conocer_pagos_inversionista  = mysql_query($conocer_pagos_inversionista,$link) or die(mysql_error());
+												$iny_conocer_pagos_inversionista  = mysqli_query($mysqli,$conocer_pagos_inversionista) or die(mysqli_error());
 												$acumuladopagosInteres = 0;
-												if(mysql_num_rows($iny_conocer_pagos_inversionista)>0){
+												if(mysqli_num_rows($iny_conocer_pagos_inversionista)>0){
 													echo"<table class='table table-bordered'>
 													<thead><th>Fecha</th><th>Monto</th></thead><tbody>
 														";
-                                        			while($fpagosInversionista = mysql_fetch_array($iny_conocer_pagos_inversionista)){
+                                        			while($fpagosInversionista = mysqli_fetch_array($iny_conocer_pagos_inversionista)){
 														echo "<tr><td><span data-toggle='tooltip' title='".strftime('%A,  %d de %B del %Y',strtotime($fpagosInversionista[5]))."'>".date("d/m/Y",strtotime($fpagosInversionista[5]))."</span></td><td>$".number_format(($fpagosInversionista[3]),2)."</td></tr>";
 														$acumuladopagosInteres += $fpagosInversionista[3];
 													}
@@ -225,14 +225,14 @@
 												echo "</div>
 												<div class='col-xs-6'>";
 												$conocer_pagos_inversionista = "select * from pinversionistas where id_credito = $fCreditos[0] AND tipo_pago='capital';";
-												$iny_conocer_pagos_inversionista  = mysql_query($conocer_pagos_inversionista,$link) or die(mysql_error());
+												$iny_conocer_pagos_inversionista  = mysqli_query($mysqli,$conocer_pagos_inversionista) or die(mysqli_error());
 												$acumuladopagos = 0;
 												$saldoinicial = $fCreditos[5];
-												if(mysql_num_rows($iny_conocer_pagos_inversionista)>0){
+												if(mysqli_num_rows($iny_conocer_pagos_inversionista)>0){
 													echo"<table class='table table-bordered'>
 													<thead><th>Fecha</th><th>Monto</th></thead><tbody>
 														";
-                                        			while($fpagosInversionista = mysql_fetch_array($iny_conocer_pagos_inversionista)){
+                                        			while($fpagosInversionista = mysqli_fetch_array($iny_conocer_pagos_inversionista)){
 														echo "<tr><td><span data-toggle='tooltip' title='".strftime('%A,  %d de %B del %Y',strtotime($fpagosInversionista[5]))."'>".date("d/m/Y",strtotime($fpagosInversionista[5]))."</span></td><td>$".number_format(($fpagosInversionista[3]),2)."</td></tr>";
 														$acumuladopagos += $fpagosInversionista[3];
 													}

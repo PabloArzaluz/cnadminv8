@@ -1,11 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/funciones.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	$fecha_actual = date("Y-m-d");
 	if(!isset($_SESSION['id_usuario'])){
@@ -84,9 +84,9 @@
 										
 										//Conocer Creditos
 										$conocer_montos_intereses_maximos = "SELECT coalesce(monto_a_fin_mes,0) from hist_calc_int_payments t1 where t1.monto_a_fin_mes=(SELECT max(t2.monto_a_fin_mes) from hist_calc_int_payments t2 where month(t2.datetime) = '".$fechaTermina->format('m')."' and year(t2.datetime) ='".$fechaTermina->format('Y')."');";
-										$iny_conocer_montos_intereses_maximos = mysql_query($conocer_montos_intereses_maximos,$link) or die(mysql_error());
+										$iny_conocer_montos_intereses_maximos = mysqli_query($mysqli,$conocer_montos_intereses_maximos) or die(mysqli_error());
 
-										$fConocerMontosInteresesMaximos = mysql_fetch_row($iny_conocer_montos_intereses_maximos);
+										$fConocerMontosInteresesMaximos = mysqli_fetch_row($iny_conocer_montos_intereses_maximos);
 										if($fConocerMontosInteresesMaximos[0]<=0){
 											echo "<td><span class='texto-peque cursiva'>Sin datos suficientes</span></td>";
 										}else{
@@ -95,13 +95,13 @@
 							          	
 										
 							          	$conocer_pagos_actuales_interes = "select  COALESCE(sum(monto),0) from pagos where MONTH(fecha_captura) = '".$fechaTermina->format('m')."' and YEAR(fecha_captura) = '".$fechaTermina->format('Y')."' and tipo_pago = 1 ";
-							          	$iny_conocer_pagos_actuales_interes = mysql_query($conocer_pagos_actuales_interes,$link) or die(mysql_error());
-							          	$fConocerPagosActualesInteres = mysql_fetch_row($iny_conocer_pagos_actuales_interes);
+							          	$iny_conocer_pagos_actuales_interes = mysqli_query($mysqli,$conocer_pagos_actuales_interes) or die(mysqli_error());
+							          	$fConocerPagosActualesInteres = mysqli_fetch_row($iny_conocer_pagos_actuales_interes);
 							          	echo "<td>$".number_format(($fConocerPagosActualesInteres[0]),2)."</td>";
 						          	    
 						          	    $conocer_pagos_actuales_capital = "select  COALESCE(sum(monto),0) from pagos where MONTH(fecha_captura) = '".$fechaTermina->format('m')."' and YEAR(fecha_captura) = '".$fechaTermina->format('Y')."' and tipo_pago = 2 ";
-							          	$iny_conocer_pagos_actuales_capital = mysql_query($conocer_pagos_actuales_capital,$link) or die(mysql_error());
-							          	$fConocerPagosActualesCapital = mysql_fetch_row($iny_conocer_pagos_actuales_capital);
+							          	$iny_conocer_pagos_actuales_capital = mysqli_query($mysqli,$conocer_pagos_actuales_capital) or die(mysqli_error());
+							          	$fConocerPagosActualesCapital = mysqli_fetch_row($iny_conocer_pagos_actuales_capital);
 							          	echo "<td>$".number_format(($fConocerPagosActualesCapital[0]),2)."</td>";    
 
 							          	
@@ -113,8 +113,8 @@
 
 
 										$conocer_total_creditos_colocados_mes = "SELECT COALESCE(SUM(monto),0) from creditos where MONTH(fecha_captura) = '".$fechaTermina->format('m')."' and YEAR(fecha_captura) = '".$fechaTermina->format('Y')."';";
-							          	$iny_conocer_total_creditos_colocados_mes = mysql_query($conocer_total_creditos_colocados_mes,$link) or die(mysql_error());
-							          	$fConocerTotalCreditosColocados = mysql_fetch_row($iny_conocer_total_creditos_colocados_mes);
+							          	$iny_conocer_total_creditos_colocados_mes = mysqli_query($mysqli,$conocer_total_creditos_colocados_mes) or die(mysqli_error());
+							          	$fConocerTotalCreditosColocados = mysqli_fetch_row($iny_conocer_total_creditos_colocados_mes);
 							          	echo "<td>$".number_format(($fConocerTotalCreditosColocados[0]),2)."</td>"; 
 										$fechaTermina->sub($IntervaloUnMes);
 						          	 }

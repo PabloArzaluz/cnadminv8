@@ -1,11 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/clientes_puntuales.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -81,7 +81,7 @@
 							 ?>
 							<?php
 								//Conocer los ultimos 3 meses
-								$query_ConocerPagosCreditosUltimos3Meses = mysql_query("SELECT 
+								$query_ConocerPagosCreditosUltimos3Meses = mysqli_query($mysqli,"SELECT 
 								creditos.id_creditos,
 								creditos.folio,
 								concat(clientes.id_clientes,'-',clientes.nombres,' ',clientes.apaterno,' ',clientes.amaterno) AS Cliente,
@@ -104,16 +104,16 @@
 							AND
 								pagos.tipo_pago=1
 							ORDER BY id_cliente asc,id_creditos asc;
-							",$link) or die(mysql_error());
+							") or die(mysqli_error());
 								echo '<table class="table">';
 								echo "<thead><th>Folio de Pago</th><th>Cobro Previsto de Intereses</th><th>Cobrado en el Mes</th><th>Capital cobrado en el Mes</th><th>Otros Adeudos</th><th>Total Cobrado en el Mes</th></thead>";
 								echo "<tbody>";
-								if(mysql_num_rows($query_ConocerPagosCreditosUltimos3Meses) > 0){
+								if(mysqli_num_rows($query_ConocerPagosCreditosUltimos3Meses) > 0){
 									$creditoTemporal = 0;
 									$cadenaFila = "";
 									$cliente = "";
 									$contadorFila = 0;
-									while($rowCreditos3Meses = mysql_fetch_array($query_ConocerPagosCreditosUltimos3Meses)){
+									while($rowCreditos3Meses = mysqli_fetch_array($query_ConocerPagosCreditosUltimos3Meses)){
 										if($cliente == "" || $cliente != $rowCreditos3Meses[2] ){
 											echo "<tr class='info'><td colspan='6'><center><strong>".$rowCreditos3Meses[2]."</strong></center></td></tr> ";
 											
@@ -157,7 +157,7 @@
 								<tbody>
 									<?php
 										//Consulta Cientes
-										$iny_clientes = mysql_query("SELECT 
+										$iny_clientes = mysqli_query($mysqli,"SELECT 
 										creditos.id_creditos,
 										creditos.folio,
 										concat(clientes.id_clientes,'-',clientes.nombres,' ',clientes.apaterno,' ',clientes.amaterno) AS Cliente,
@@ -180,11 +180,11 @@
 									AND
 										pagos.tipo_pago=1
 									ORDER BY id_cliente asc,id_creditos asc;
-									",$link) or die (mysql_error());
-									$row = mysql_fetch_array($iny_clientes);
+									") or die (mysqli_error());
+									$row = mysqli_fetch_array($iny_clientes);
 									var_dump($row);
-										if(mysql_num_rows($iny_clientes) > 0){
-							              while($row = mysql_fetch_array($iny_clientes)){
+										if(mysqli_num_rows($iny_clientes) > 0){
+							              while($row = mysqli_fetch_array($iny_clientes)){
 							                echo "<tr>
 							                <td>".$row[0]."</td>
 							                <td> ".$row[1]." ".$row[2]." ".$row[3]."</td>
@@ -203,8 +203,8 @@
                                                   echo "<span class='label label-warning'>Vendido</span>";
                                               }
                                             $conocerSaldoRestante = "SELECT sum(monto) from pagos where id_credito= $row[0] and tipo_pago= 2;";
-                                            $iny_conocerSaldoRestante = mysql_query($conocerSaldoRestante,$link) or die(mysql_error());
-				                            $fSaldoRestante = mysql_fetch_row($iny_conocerSaldoRestante); 
+                                            $iny_conocerSaldoRestante = mysqli_query($mysqli,$conocerSaldoRestante) or die(mysqli_error());
+				                            $fSaldoRestante = mysqli_fetch_row($iny_conocerSaldoRestante); 
 				                            
 				                            $saldoRestante = $row[6] - $fSaldoRestante[0];
 

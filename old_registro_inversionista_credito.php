@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -45,9 +45,9 @@
 				'',
 				'')";
 
-    			//$resultado= mysql_query($query,$link) or die(mysql_error());
+    			//$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 
-				//$id_cliente_insertado = mysql_insert_id();
+				//$id_cliente_insertado = mysqli_insert_id();
 
 
 		if (isset($_POST['info']) && $_POST['info'] == '1'){

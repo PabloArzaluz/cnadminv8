@@ -1,10 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	error_reporting(E_ALL); ini_set("display_errors", 1);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -21,7 +22,7 @@
 	$idCredito = $_GET['idCredito'];
 
    	$query= "DELETE from avales WHERE id_avales = $idaval;";
-    $resultado= mysql_query($query,$link) or die(mysql_error());
+    $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 
 	header('Location: detalle-credito.php?id='.$idCredito);
 

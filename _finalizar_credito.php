@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -20,9 +20,9 @@
     //$id_credito = $_SESSION['id_credito'];
     
    $query = "UPDATE creditos SET motivo_finalizacion_credito = '$motivo',comentario_finalizacion_credito = '$comentarios',status='2',fecha_cierre_credito='$fecha' WHERE id_creditos = '$id_credito';";
-    $resultado= mysql_query($query,$link) or die(mysql_error());
+    $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 
-				//$id_cliente = mysql_insert_id();
+				//$id_cliente = mysqli_insert_id();
     
     //unset($_SESSION['id_cliente']);
     //unset($_SESSION['id_credito']);

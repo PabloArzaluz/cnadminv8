@@ -1,9 +1,9 @@
 <?php
     session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -27,7 +27,7 @@
         chmod($ruta,0777);
         $insertar_informacion_archivo = "INSERT INTO archiv_adic_credito(id_credito,usuario_sube,datetime,descripcion,nombreArchivo,path) 
         VALUES('$id_credito','$usuario_sube','$fecha $hora','$descripcion','$nombre_archivo_original','$ruta');";
-        $iny_consulta = mysql_query($insertar_informacion_archivo,$link) or die(mysql_error());
+        $iny_consulta = mysqli_query($mysqli,$insertar_informacion_archivo) or die(mysqli_error());
         header("Location:detalle-credito.php?id=".$id_credito);
     }else{
         

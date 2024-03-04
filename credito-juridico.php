@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -90,8 +90,8 @@
 										if($operacion == "edit"){
 											$id_juridico = $_GET['juridico'];
 											$query_info_juridico = "SELECT * FROM juridicos WHERE id_juridicos = $id_juridico;";
-											$iny_info_juridico = mysql_query($query_info_juridico,$link) or die (mysql_error());
-											$fila_info_juridico = mysql_fetch_array($iny_info_juridico);
+											$iny_info_juridico = mysqli_query($mysqli,$query_info_juridico) or die (mysqli_error());
+											$fila_info_juridico = mysqli_fetch_array($iny_info_juridico);
 											
 											$juzgado 			= $fila_info_juridico['juzgado'];
 											$expediente 		= $fila_info_juridico['expediente'];
@@ -121,8 +121,8 @@
                                         ON
                                             creditos.id_cliente = clientes.id_clientes
                                             where creditos.id_creditos= $id_credito;";
-                                        $iny_conocer_datos_cliente = mysql_query($conocer_datos_cliente,$link)or die(mysql_error());
-                                        $row_credito = mysql_fetch_row($iny_conocer_datos_cliente);
+                                        $iny_conocer_datos_cliente = mysqli_query($mysqli,$conocer_datos_cliente)or die(mysqli_error());
+                                        $row_credito = mysqli_fetch_row($iny_conocer_datos_cliente);
                                     ?>
 								<div class="col-md-12">
                                         <div class="form-group">

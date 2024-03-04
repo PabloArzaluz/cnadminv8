@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -55,13 +55,13 @@
                         for($i = 1; $i<=$dias;$i++){
                             //Interes
                             $conocer_pagos_interes_por_dia = "select sum(monto) from pagos where year(fecha_pago)='$ano' and month(fecha_pago)='$mes' and day(fecha_pago)='$i' and tipo_pago=1;";
-                            $iny_conocer_pago_interes_por_dia = mysql_query($conocer_pagos_interes_por_dia,$link) or die(mysql_error());
-                            $row_interes = mysql_fetch_row($iny_conocer_pago_interes_por_dia);
+                            $iny_conocer_pago_interes_por_dia = mysqli_query($mysqli,$conocer_pagos_interes_por_dia) or die(mysqli_error());
+                            $row_interes = mysqli_fetch_row($iny_conocer_pago_interes_por_dia);
                             
                             //Capital
                             $conocer_pagos_capital_por_dia = "select sum(monto) from pagos where year(fecha_pago)='$ano' and month(fecha_pago)='$mes' and day(fecha_pago)='$i' and tipo_pago=2;";
-                            $iny_conocer_pago_capital_por_dia = mysql_query($conocer_pagos_capital_por_dia,$link) or die(mysql_error());
-                            $row_capital = mysql_fetch_row($iny_conocer_pago_capital_por_dia);
+                            $iny_conocer_pago_capital_por_dia = mysqli_query($mysqli,$conocer_pagos_capital_por_dia) or die(mysqli_error());
+                            $row_capital = mysqli_fetch_row($iny_conocer_pago_capital_por_dia);
                             
                             if($row_interes[0] != ""){
                                 $cantidad_acumulada_interes = $row_interes[0];

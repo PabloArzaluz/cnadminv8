@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -30,11 +30,11 @@
 			$comentarios_asignado_inver = $_POST['comentarios_asignado_inver'][$key];
 
 			$query = "INSERT into inversionistas_creditos(id_inversionista,id_credito,monto,interes,comentarios,fecha_registro,id_usuario_registro,estatus_en_credito) VALUES('".$id_inversionistas."','".$id_credito."','".$cantidad_asignada."','".$interes_asignado_inver."','".$comentarios_asignado_inver."','".$fecha." ".$hora."','".$_SESSION['id_usuario']."',1);";
-			$resultado= mysql_query($query,$link) or die(mysql_error());
+			$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 			
 			//Registro en archivo Historico los valores del Interes del Inversionista
 			$query_REGISTRA_INFORMACION_HISTORICA_INTERES_INVER = "INSERT INTO histor_inter_inver_credit(id_credito,interes,fecha_inicio,id_inversionista) VALUES('$id_credito','$interes_asignado_inver','$fecha $hora','$id_inversionistas')";
-    		$resultado_REGISTRA_INFORMACION_HISTORICA_INTERES_INVER= mysql_query($query_REGISTRA_INFORMACION_HISTORICA_INTERES_INVER,$link) or die(mysql_error());
+    		$resultado_REGISTRA_INFORMACION_HISTORICA_INTERES_INVER= mysqli_query($mysqli,$query_REGISTRA_INFORMACION_HISTORICA_INTERES_INVER) or die(mysqli_error());
 
 			unset($_SESSION['id_cliente']);
     		unset($_SESSION['id_credito']);
@@ -48,7 +48,7 @@
 
 	
 
-	//$id_cliente = mysql_insert_id();
+	//$id_cliente = mysqli_insert_id();
 
     
   ?>

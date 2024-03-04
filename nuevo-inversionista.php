@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}

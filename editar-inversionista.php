@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -49,8 +49,8 @@
 						</div>
 			<?php
 				$id = $_GET['id'];
-				$iny_info = mysql_query("select * from inversionistas where id_inversionistas=$id;",$link) or die(mysql_error());
-				$fcliente = mysql_fetch_row($iny_info);
+				$iny_info = mysqli_query($mysqli,"select * from inversionistas where id_inversionistas=$id;") or die(mysqli_error());
+				$fcliente = mysqli_fetch_row($iny_info);
 			?>
 			<!-- main -->
 			<div class="content">

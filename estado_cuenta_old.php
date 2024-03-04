@@ -1,6 +1,6 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	date_default_timezone_set('America/Mexico_City');
 	setlocale(LC_ALL, 'es_MX.UTF-8');
 
@@ -8,7 +8,7 @@
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/funciones.php");
-	$link = Conecta();
+	
 	$date_actual = date("Y-m-d");
 	$hora = date('g:i:s A');
 

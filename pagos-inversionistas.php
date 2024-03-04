@@ -1,6 +1,6 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
@@ -11,7 +11,7 @@
 	if(validarAccesoModulos('permiso_inversionistas') != 1) {
 		header("Location: dashboard.php");
 	}
-	$link = Conecta();
+	
 
 	$pagina_actual = "pagos-inversionistas";
     //Validar Permisos
@@ -117,7 +117,7 @@
 								<tbody>
 									<?php
 										//Consulta Pagos
-										$iny_pagos = mysql_query("SELECT 
+										$iny_pagos = mysqli_query($mysqli,"SELECT 
 																pinversionistas.id_pinversionistas,
 																pinversionistas.id_credito,
 																pinversionistas.id_inversionista,
@@ -143,9 +143,9 @@
 																INNER JOIN
 																inversionistas
 																ON
-																creditos.id_inversionista = inversionistas.id_inversionistas;",$link) or die (mysql_error());
-										if(mysql_num_rows($iny_pagos) > 0){
-							              while($row = mysql_fetch_array($iny_pagos)){
+																creditos.id_inversionista = inversionistas.id_inversionistas;") or die (mysqli_error());
+										if(mysqli_num_rows($iny_pagos) > 0){
+							              while($row = mysqli_fetch_array($iny_pagos)){
 							                echo "<tr>
 											<td>$row[0]</td>
 							                <td><a href='detalle-credito.php?id=$row[1]'>[$row[11]]</a></td>

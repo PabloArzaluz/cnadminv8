@@ -2,6 +2,7 @@
 	session_start(); // crea una sesion
 	error_reporting(E_ALL); ini_set("display_errors", 1);
 	
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
@@ -148,7 +149,7 @@
 									$iny_conocer_colocados_mes_actual = mysqli_query($mysqli,$qry_ConocerCreditosColocados) or die(mysqli_error());
 									$row_conocer_colocados_mes_actual = mysqli_fetch_row($iny_conocer_colocados_mes_actual);
 								?>
-								<span class="inv-green"><strong>$ <?php echo number_format($row_conocer_colocados_mes_actual[0],2); ?></strong> <i class="fa fa-caret-up"></i></span>
+								<span class="inv-green"><strong>$ <?php echo number_format((float) $row_conocer_colocados_mes_actual[0],2); ?></strong> <i class="fa fa-caret-up"></i></span>
 								
 							</div>
 
@@ -337,8 +338,9 @@
                                 		echo "<tr><td colspan='6'>";
 
                                 		$formateofecha = date_format($fechaTermina, 'Y-m-d');
-
-                                		echo "<center><h4>Pagos Rezagados (".strftime('%B del %Y',strtotime($formateofecha)).")</h4></center></td></tr>";
+										echo strtotime($formateofecha);
+										echo "<center><h4>Pagos Rezagados (".date('F Y',strtotime($formateofecha)).")</h4></center></td></tr>";
+                                		//echo "<center><h4>Pagos Rezagados (".strftime('%B del %Y',strtotime($formateofecha)).")</h4></center></td></tr>";
 						          		while($row_morosos_anteriores = mysqli_fetch_array($iny_conocer_morosos_anteriores)){
 						          			$fechaInicialCredito = date('Y-m-d', strtotime($row_morosos_anteriores[4]));
 						          			$fechaCorriendo = date('Y-m-d', strtotime(date_format($fechaTermina, 'd-m-Y')));

@@ -1,11 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
     date_default_timezone_set('America/Mexico_City');
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -64,13 +64,13 @@
 							<ul class="list-unstyled activity-list">
 								<?php
 									$conocer_resultados_avales = "SELECT * FROM avales WHERE nombre_completo LIKE '%$buscar%' ";
-									$iny_conocer_resultados_avales = mysql_query($conocer_resultados_avales,$link) or die(mysql_error());
-									$numero_avales = mysql_num_rows($iny_conocer_resultados_avales);
+									$iny_conocer_resultados_avales = mysqli_query($mysqli,$conocer_resultados_avales) or die(mysqli_error());
+									$numero_avales = mysqli_num_rows($iny_conocer_resultados_avales);
 									echo "<h2>Avales</h2> <i>$numero_avales resultados</i>";
-									if(mysql_num_rows($iny_conocer_resultados_avales) > 0){
+									if(mysqli_num_rows($iny_conocer_resultados_avales) > 0){
                                         echo "<li>";
                                         echo "<table class='table'>";
-                                        while($favales = mysql_fetch_array($iny_conocer_resultados_avales)){
+                                        while($favales = mysqli_fetch_array($iny_conocer_resultados_avales)){
                                         	echo "<tr><td><i class='fa fa-credit-card' aria-hidden='true'></i> &nbsp;</td><td> <b>  $favales[2]</b> </td><td>&nbsp;es aval en el credito</td><td> <a href='detalle-credito.php?id=$favales[1]'>$favales[1]</a> <td><span class='timestamp'></span></td></tr>";
                                         }
                                         echo "</table>";
@@ -81,13 +81,13 @@
 								?>
 								<?php
 									$conocer_resultados_clientes = "SELECT * FROM clientes WHERE nombres LIKE '%$buscar%' or  apaterno LIKE '%$buscar%' OR amaterno LIKE '%$buscar%';";
-									$iny_conocer_resultados_clientes = mysql_query($conocer_resultados_clientes,$link) or die(mysql_error());
-									$numero_clientes = mysql_num_rows($iny_conocer_resultados_clientes);
+									$iny_conocer_resultados_clientes = mysqli_query($mysqli,$conocer_resultados_clientes) or die(mysqli_error());
+									$numero_clientes = mysqli_num_rows($iny_conocer_resultados_clientes);
 									echo "<h2>Clientes</h2> <i>$numero_clientes resultados</i>";
-									if(mysql_num_rows($iny_conocer_resultados_clientes) > 0){
+									if(mysqli_num_rows($iny_conocer_resultados_clientes) > 0){
                                         echo "<li>";
                                         echo "<table class='table'>";
-                                        while($fclientes = mysql_fetch_array($iny_conocer_resultados_clientes)){
+                                        while($fclientes = mysqli_fetch_array($iny_conocer_resultados_clientes)){
                                         	echo "<tr><td><i class='fa fa-group' aria-hidden='true'></i> &nbsp;</td><td> <a href='cliente-profile.php?id=$fclientes[0]'><b>  $fclientes[1] $fclientes[2] $fclientes[3]</b> </a></td></tr>";
                                         }
                                         echo "</table>";
@@ -98,13 +98,13 @@
 								?>
 								<?php
 									$conocer_resultados_inversionistas = "SELECT * FROM inversionistas WHERE status NOT LIKE 'inactivo' and nombre LIKE '%$buscar%';";
-									$iny_conocer_resultados_inversionistas = mysql_query($conocer_resultados_inversionistas,$link) or die(mysql_error());
-									$numero_inversionistas = mysql_num_rows($iny_conocer_resultados_inversionistas);
+									$iny_conocer_resultados_inversionistas = mysqli_query($mysqli,$conocer_resultados_inversionistas) or die(mysqli_error());
+									$numero_inversionistas = mysqli_num_rows($iny_conocer_resultados_inversionistas);
 									echo "<h2>Inversionistas</h2> <i>$numero_inversionistas resultados</i>";
-									if(mysql_num_rows($iny_conocer_resultados_inversionistas) > 0){
+									if(mysqli_num_rows($iny_conocer_resultados_inversionistas) > 0){
                                         echo "<li>";
                                         echo "<table class='table'>";
-                                        while($finversionistas = mysql_fetch_array($iny_conocer_resultados_inversionistas)){
+                                        while($finversionistas = mysqli_fetch_array($iny_conocer_resultados_inversionistas)){
                                         	echo "<tr><td><i class='fa fa-briefcase' aria-hidden='true'></i> &nbsp;</td><td> <a href='detalle-inversionista.php?id=$finversionistas[0]'><b>  $finversionistas[1]</b> </a></td></tr>";
                                         }
                                         echo "</table>";

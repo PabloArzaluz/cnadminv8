@@ -1,14 +1,14 @@
 <?php
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	
 
 	date_default_timezone_set('America/Mexico_City');
 	$fecha = date("Y-m-d");
   	$hora = date("G:i:s");
-
+	include("conf/config.inc.php");
 
   	//Muestra la cantidad que resta a pagar para un credito
   	function conocer_monto_deudor($credito) {
-  		$link = Conecta();
+  		
 	  $query = "
 			SELECT
                 creditos.id_creditos,
@@ -30,12 +30,12 @@
                 creditos.id_cliente = clientes.id_clientes
                 where creditos.id_creditos = '".strtolower($credito)."' and (creditos.status = 1 OR creditos.status =3 OR creditos.status =4 OR creditos.status =2 );
             ";
-			$results = mysql_query($query,$link) or die(mysql_error());
-			$fCredito = mysql_fetch_row($results);
+			$results = mysqi_query($mysqli,$query) or die(mysqli_error());
+			$fCredito = mysqli_fetch_row($results);
 
 			$TotalPagosCapital = "SELECT sum(monto) from pagos where id_credito= ".$credito." and tipo_pago= 2;";
-			$iny_TotalPagosCapital = mysql_query($TotalPagosCapital, $link) or die(mysql_error());
-			$fTotalPagosCapital = mysql_fetch_row($iny_TotalPagosCapital);
+			$iny_TotalPagosCapital = mysqli_query($mysqli,$TotalPagosCapital) or die(mysqli_error());
+			$fTotalPagosCapital = mysqli_fetch_row($iny_TotalPagosCapital);
 
 			if($fTotalPagosCapital[0] == ""){
 				$totalPagos = 0;
@@ -50,7 +50,7 @@
 
 
 	function conocer_interes_hoy($credito){
-		$link = Conecta();
+		
 		$query = "
 		SELECT
             creditos.id_creditos,
@@ -72,8 +72,8 @@
             creditos.id_cliente = clientes.id_clientes
             where creditos.id_creditos = '".strtolower($credito)."' and (creditos.status = 1 OR creditos.status =3);
         ";
-		$results = mysql_query($query,$link) or die(mysql_error());
-		$fCredito = mysql_fetch_row($results);
+		$results = mysqli_query($mysqli,$query) or die(mysqli_error());
+		$fCredito = mysqli_fetch_row($results);
 
 
 		if($fCredito[10] == ""){
@@ -98,14 +98,8 @@
 	}
 
 	function conocer_informacion_credito($credito){
-		$dbhost="localhost";
-		$dbuser="credinie_portalu";
-		$dbpass="sZ;ZcC&XlfAv";
-		$dbname="credinie_portal_sl";
-		$mysqli = mysqli_connect($dbhost, $dbuser, $dbpass, $dbname);
-		if (mysqli_connect_errno($mysqli)) {
-		echo "Failed to connect to MySQL: " . mysqli_connect_error();
-		}
+		include("conf/config.inc.php");
+		
 		$consultar_credito = "select * from creditos where id_creditos = '$credito';";
 		$iny_consultar_credito = mysqli_query($mysqli,$consultar_credito) or die (mysqli_error());
 		$fila_credito = mysqli_fetch_row($iny_consultar_credito);

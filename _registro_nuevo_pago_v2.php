@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	include("include/functions.php");
 	include("include/funciones.php");
@@ -26,8 +26,8 @@
     
 	//Verificar Folio folio-fisico
 	$conocer_folio_existente = "select * from pagos where folio_fisico='$folio_fisico';";
-	$iny_conocer_folio_existente = mysql_query($conocer_folio_existente,$link) or die (mysql_error());
-	if(mysql_num_rows($iny_conocer_folio_existente) == 0){
+	$iny_conocer_folio_existente = mysqli_query($mysqli,$conocer_folio_existente) or die (mysqli_error());
+	if(mysqli_num_rows($iny_conocer_folio_existente) == 0){
 		//No existe folio, se procede a la insercion
 		if($tipo_pago == 1){
 			//Pago Mensual de Intereses
@@ -41,8 +41,8 @@
                                     creditos c
                                 LEFT JOIN
                                     pagos p ON c.id_creditos = p.id_credito where id_creditos=$credito";
-            $iny_InformacionCredito = mysql_query($InformacionCredito, $link) or die(mysql_error());
-            $f_InformacionCredito = mysql_fetch_assoc($iny_InformacionCredito); 
+            $iny_InformacionCredito = mysqli_query($mysqli,$InformacionCredito) or die(mysqli_error());
+            $f_InformacionCredito = mysqli_fetch_assoc($iny_InformacionCredito); 
             $monto_a_pagar_regular = ($f_InformacionCredito["saldo_credito"]/100)*$f_InformacionCredito["interes"];
             $excedente = round($monto_pago - $monto_a_pagar_regular,2);
             
@@ -70,7 +70,7 @@
                     '$modulo_registro',
                     '$metodo_pago'
                 );";
-            $iny_insertar_pago = mysql_query($insertar_pago,$link) or die(mysql_error());
+            $iny_insertar_pago = mysqli_query($mysqli,$insertar_pago) or die(mysqli_error());
 
             if($excedente > 0){
                 //Hay excedente
@@ -89,14 +89,14 @@
                     '$modulo_registro',
                     '$metodo_pago'
                 );";
-            $iny_insertar_pago_moratorio = mysql_query($insertar_pago_moratorio,$link) or die(mysql_error());
+            $iny_insertar_pago_moratorio = mysqli_query($mysqli,$insertar_pago_moratorio) or die(mysqli_error());
             //Inserta log para monitoreo
             $insertar_log_pago_moratorio = "INSERT into log_pago_moratorio(folio_pago,fecha_captura,monto_original) values(
                 'M-$folio_fisico',
                 '$fecha_captura',
                 '$monto_pago'
             );";
-            $iny_insertar_log_pago_moratorio = mysql_query($insertar_log_pago_moratorio,$link) or die(mysql_error());
+            $iny_insertar_log_pago_moratorio = mysqli_query($mysqli,$insertar_log_pago_moratorio) or die(mysqli_error());
             }
 			header('Location: pagos.php?info=1');
 		}
@@ -118,7 +118,7 @@
 					'$modulo_registro',
 					'$metodo_pago'
 	                );";
-		    $resultado= mysql_query($query,$link) or die(mysql_error());
+		    $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 		    header('Location: pagos.php?info=1');
 		}
 	}else{

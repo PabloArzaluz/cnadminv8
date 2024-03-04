@@ -1,11 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/funciones.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	$fecha_actual = date("Y-m-d");
 	if(!isset($_SESSION['id_usuario'])){

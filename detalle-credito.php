@@ -1,16 +1,15 @@
 <?php
 	session_start();
-  header('Content-Type: text/html; charset=UTF-8');
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+    header('Content-Type: text/html; charset=UTF-8');
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
     include("conf/config.inc.php");
     include("include/functions.php"); 
     include("include/funciones.php");
-  date_default_timezone_set('America/Mexico_City');
-  setlocale(LC_ALL, 'es_MX.UTF-8');
-	$link = Conecta();
-
-    mysql_set_charset('utf8', $link);
+    date_default_timezone_set('America/Mexico_City');
+    setlocale(LC_ALL, 'es_MX.UTF-8');
+	
+    mysqli_set_charset($mysqli,'utf8');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -134,11 +133,11 @@
                              ?>
                             <?php
                                 $CONOCER_ALERTA_ACTUAL = "SELECT * from alerta_credito where idCredito = $id_credito AND status = 1 ORDER BY idAlertaCredito desc limit 1";
-                                $INY_CONOCER_ALERTA_ACTUAL = mysql_query($CONOCER_ALERTA_ACTUAL,$link) or die(mysql_error());
+                                $INY_CONOCER_ALERTA_ACTUAL = mysqli_query($mysqli,$CONOCER_ALERTA_ACTUAL) or die(mysqli_error());
                                 $alertaActivada = 0;
-                                if(mysql_num_rows($INY_CONOCER_ALERTA_ACTUAL) > 0 ){
+                                if(mysqli_num_rows($INY_CONOCER_ALERTA_ACTUAL) > 0 ){
                                     $alertaActivada = 1;
-                                    $FILA_CONOCER_ALERTA_ACTUAL = mysql_fetch_array($INY_CONOCER_ALERTA_ACTUAL);
+                                    $FILA_CONOCER_ALERTA_ACTUAL = mysqli_fetch_array($INY_CONOCER_ALERTA_ACTUAL);
                                 }
                                 if(validarAccesoModulos('permiso_alertas_credito') == 1){ 
                                 if($alertaActivada == 1){
@@ -202,18 +201,18 @@
                                                             if($fila_credito[12] == 3){
                                                                 //CREDITO JURIDICO
                                                                 $CONOCER_FECHA_JURIDICO = "SELECT fecha_registro from juridicos where id_credito=$id_credito ORDER BY id_juridicos desc limit 1";
-                                                                $INY_CONOCER_FECHA_JURIDICO = mysql_query($CONOCER_FECHA_JURIDICO,$link) or die(mysql_error());
-                                                                $FILA_CONOCER_FECHA_JURIDICO = mysql_fetch_array($INY_CONOCER_FECHA_JURIDICO);
+                                                                $INY_CONOCER_FECHA_JURIDICO = mysqli_query($mysqli,$CONOCER_FECHA_JURIDICO) or die(mysqli_error());
+                                                                $FILA_CONOCER_FECHA_JURIDICO = mysqli_fetch_array($INY_CONOCER_FECHA_JURIDICO);
                                                                 echo "<h3><span class='label label-danger'>JURIDICO <span class='badge'>Fecha: ".date("d/m/Y",strtotime($FILA_CONOCER_FECHA_JURIDICO[0]))."</span></span></h3>";
                                                             }
                                                             if($fila_credito[12] == 4){
                                                                 //CCREDITO VENDIDO
                                                                 echo "";
                                                                 $conocer_informacion_credito_vendido = "SELECT fechahora,comentarios,statusanterior FROM creditos_vendidos WHERE idCredito = $id_credito;";
-                                                                $iny_ConocInforCrediVendi = mysql_query($conocer_informacion_credito_vendido,$link) or die(mysql_error());
+                                                                $iny_ConocInforCrediVendi = mysqli_query($mysqli,$conocer_informacion_credito_vendido) or die(mysqli_error());
                                                                 
-                                                                if(mysql_num_rows($iny_ConocInforCrediVendi) > 0){
-                                                                    $fVentaCredit = mysql_fetch_array($iny_ConocInforCrediVendi);
+                                                                if(mysqli_num_rows($iny_ConocInforCrediVendi) > 0){
+                                                                    $fVentaCredit = mysqli_fetch_array($iny_ConocInforCrediVendi);
                                                                     $infoVendidos = "Fecha Venta: ".$fVentaCredit[0]."<br>Comentarios: ".$fVentaCredit[1]."<br>Estatus Anterior: ".conocer_estatus_credito_cadena($fVentaCredit[2]);
 
                                                                     echo '<h3><span class="label label-warning">VENDIDO</span><a href="#" data-html="true" title="Informacion de Venta de Credito" data-toggle="popover" data-trigger="hover" data-content="'.$infoVendidos.'">
@@ -348,11 +347,11 @@
                                                         <?php
                                                             //Search other dates stored in same credit.
                                                             $conocer_fechas_existentes = "SELECT * FROM historfechcredmodif WHERE idCredito = $id_credito ORDER BY fechaHoraModificacion DESC;";
-                                                            $iny_conocer_fechas_existentes = mysql_query($conocer_fechas_existentes,$link) or die(mysql_error());
+                                                            $iny_conocer_fechas_existentes = mysqli_query($mysqli,$conocer_fechas_existentes) or die(mysqli_error());
 
-                                                            if(mysql_num_rows($iny_conocer_fechas_existentes) > 0){
+                                                            if(mysqli_num_rows($iny_conocer_fechas_existentes) > 0){
                                                                 $cadena_fechas = "";
-                                                                while ($fila_fechas = mysql_fetch_array($iny_conocer_fechas_existentes)){
+                                                                while ($fila_fechas = mysqli_fetch_array($iny_conocer_fechas_existentes)){
                                                                     $cadena_fechas = $cadena_fechas.$fila_fechas[3]."<br>";
                                                                 }
 
@@ -368,8 +367,8 @@
                                                     <td class="der">Capturado por:</td>
                                                     <td class="izq"><strong>
                                                         <?php
-                                                            $iny_usuario_captura = mysql_query("select * from usuario where id_user='$fila_credito[3]';",$link) or die(mysql_error());
-                                                            $fila_usuario_captura = mysql_fetch_row($iny_usuario_captura);
+                                                            $iny_usuario_captura = mysqli_query($mysqli,"select * from usuario where id_user='$fila_credito[3]';") or die(mysqli_error());
+                                                            $fila_usuario_captura = mysqli_fetch_row($iny_usuario_captura);
                                                             echo $fila_usuario_captura[5]." ".$fila_usuario_captura[6];
                                                         ?>
                                                     </strong></td>
@@ -496,11 +495,11 @@
 								<div class="widget-content">
 									<?php
                                         $conocer_archivos_adicionales = "SELECT * FROM archiv_adic_credito WHERE id_credito = $id_credito ORDER BY datetime DESC;";
-                                        $iny_conocer_archivos_adicionales = mysql_query($conocer_archivos_adicionales,$link) or die(mysql_error());
+                                        $iny_conocer_archivos_adicionales = mysqli_query($mysqli,$conocer_archivos_adicionales) or die(mysqli_error());
 
-                                        if(mysql_num_rows($iny_conocer_archivos_adicionales) > 0){
+                                        if(mysqli_num_rows($iny_conocer_archivos_adicionales) > 0){
                                             echo '<table style="width:100%;">';
-                                            while ($f_archivos_adicionales = mysql_fetch_assoc($iny_conocer_archivos_adicionales)){
+                                            while ($f_archivos_adicionales = mysqli_fetch_assoc($iny_conocer_archivos_adicionales)){
                                                
                                                 echo '
                                                 
@@ -568,8 +567,8 @@
                                                 </tr>
                                                     <?php
                                                         $conocer_cliente = "select * from clientes where id_clientes=".$fila_credito[1].";";
-                                                        $iny_consultar_cliente = mysql_query($conocer_cliente, $link) or die (mysql_error());
-                                                        $fila_cliente = mysql_fetch_row($iny_consultar_cliente);
+                                                        $iny_consultar_cliente = mysqli_query($mysqli,$conocer_cliente) or die (mysqli_error());
+                                                        $fila_cliente = mysqli_fetch_row($iny_consultar_cliente);
                                                     ?>
                                                 <tr>
                                                     <td class="der">Nombre: </td>
@@ -632,10 +631,10 @@
                                                             WHEN 4 THEN 'VENDIDO'
                                                             END AS status
                                                             from creditos where id_cliente='$fila_cliente[0]' AND id_creditos NOT IN (".$fila_credito[0].") order by fechadealta desc;";
-                                                            $INY_CONSULTA_SABER_CREDITOS = mysql_query($CONSULTA_SABER_CREDITOS,$link) or die(mysql_error());
-                                                            if(mysql_num_rows($INY_CONSULTA_SABER_CREDITOS) > 0){
+                                                            $INY_CONSULTA_SABER_CREDITOS = mysqli_query($mysqli,$CONSULTA_SABER_CREDITOS) or die(mysqli_error());
+                                                            if(mysqli_num_rows($INY_CONSULTA_SABER_CREDITOS) > 0){
                                                                 echo "<table class='table table-striped'>";
-                                                                while ($F_CONOCER_HISTORIAL_CREDITOS = mysql_fetch_assoc($INY_CONSULTA_SABER_CREDITOS)){
+                                                                while ($F_CONOCER_HISTORIAL_CREDITOS = mysqli_fetch_assoc($INY_CONSULTA_SABER_CREDITOS)){
                                                                     echo '
                                                                         <tr>
                                                                             <td class="der"><a href="detalle-credito.php?id='.$F_CONOCER_HISTORIAL_CREDITOS["id_creditos"].'">'.$F_CONOCER_HISTORIAL_CREDITOS["folio"].'</a></td>
@@ -804,8 +803,8 @@
                                 <div class="widget-content">
                                     <?php
                                         $conocer_info_juridico = "SELECT id_juridicos,id_credito,fecha_registro, usuario.nombre, usuario.apellidos, juzgado, expediente, etapaprocesal, convenios_path, convenios_file_name, comentarios, fechareactivacion  FROM juridicos INNER JOIN usuario ON juridicos.usuario_registro = usuario.id_user WHERE id_credito='$id_credito' and juzgado <> '' ORDER BY fecha_registro DESC;";
-                                        $iny_conocer_info_juridico = mysql_query($conocer_info_juridico, $link) or die(mysql_error());
-                                        if(mysql_num_rows($iny_conocer_info_juridico) > 0){
+                                        $iny_conocer_info_juridico = mysqli_query($mysqli,$conocer_info_juridico) or die(mysqli_error());
+                                        if(mysqli_num_rows($iny_conocer_info_juridico) > 0){
                                           
                                             echo "<span class='label label-warning'>Actividad registrada en juridico, favor de validar. (Inicial)</span><br><br>";
                                     ?>
@@ -826,7 +825,7 @@
                                             </thead>
                                             <tbody>
                                             <?php
-                                                while($row_juridico = mysql_fetch_array($iny_conocer_info_juridico)){
+                                                while($row_juridico = mysqli_fetch_array($iny_conocer_info_juridico)){
                                             ?>
                                                         
 
@@ -924,7 +923,7 @@
                                 <div class="widget-content">
                                     <?php
                                         $conocer_avales = "SELECT * FROM avales where id_credito='$id_credito';";
-                                        $iny_conocer_avales = mysql_query($conocer_avales, $link) or die(mysql_error());
+                                        $iny_conocer_avales = mysqli_query($mysqli,$conocer_avales) or die(mysqli_error());
                                     ?>
 	                                <table class="table">
                                         <thead>
@@ -939,9 +938,9 @@
                                         </thead>
                                         <tbody>
                                             <?php
-                                                if(mysql_num_rows($iny_conocer_avales) > 0){
+                                                if(mysqli_num_rows($iny_conocer_avales) > 0){
                                                     $contador_avales = 1;
-                                                  while($fila_avales = mysql_fetch_array($iny_conocer_avales)){
+                                                  while($fila_avales = mysqli_fetch_array($iny_conocer_avales)){
                                                     echo "
                                                         <tr>
                                                             <td width='5%'></td>
@@ -1011,9 +1010,9 @@
                                         <tbody>
                                             <?php
                                                 $conocer_inmuebles = "select * from inmuebles where id_credito=".$fila_credito[0].";";
-                                                $iny_consultar_inmuebles = mysql_query($conocer_inmuebles, $link) or die (mysql_error());
-                                                if(mysql_num_rows($iny_consultar_inmuebles) > 0){
-                                                  while($fila_inmuebles = mysql_fetch_array($iny_consultar_inmuebles)){
+                                                $iny_consultar_inmuebles = mysqli_query($mysqli,$conocer_inmuebles) or die (mysqli_error());
+                                                if(mysqli_num_rows($iny_consultar_inmuebles) > 0){
+                                                  while($fila_inmuebles = mysqli_fetch_array($iny_consultar_inmuebles)){
                                                     echo "<tr>
                                                             <td>
                                                                 <strong>$fila_inmuebles[3]</strong>
@@ -1138,18 +1137,18 @@
                                                     {
                                                         echo "<tr><td style='vertical-align:middle;'><center><strong>";
                                                         $formateoFecha = $fecha_inicial->format('Y-m-d');
-                                                        echo strftime('%B / %Y',strtotime($formateoFecha));
+                                                        echo date('F Y',strtotime($formateoFecha));
 
                                                         echo "</strong></center></td>";
                                                         $mes = $fecha_inicial->format('m');
                                                         $ano = $fecha_inicial->format('Y');
                                                         $fecha_completa = $fecha_inicial->format('d/m/Y');
                                                         $conocer_pago_mes = "select * from pagos where year(fecha_pago)='".$ano."' and month(fecha_pago)='".$mes."' and id_credito='".$fila_credito[0]."';";
-                                                        $iny_conocer_pago_mes = mysql_query($conocer_pago_mes,$link) or die(mysql_error());
+                                                        $iny_conocer_pago_mes = mysqli_query($mysqli,$conocer_pago_mes) or die(mysqli_error());
 
-                                                        if(mysql_num_rows($iny_conocer_pago_mes)>0){
+                                                        if(mysqli_num_rows($iny_conocer_pago_mes)>0){
                                                             echo "<td><table class='table'>";
-                                                           while($fila = mysql_fetch_array($iny_conocer_pago_mes)){
+                                                           while($fila = mysqli_fetch_array($iny_conocer_pago_mes)){
                                                                echo "<tr>";
                                                                echo "<td><span class='badge'>Folio: $fila[8]</span></td>";
                                                                if($fila[6] == 1){
@@ -1173,9 +1172,9 @@
                                                                 echo "</tr>";
                                                                 //Conocer Si hay adeudo
                                                                 $AdeudExisPago = "SELECT * FROM adeudos where folio_fisico='$fila[8]';";
-                                                                $iny_AdeudExisPago = mysql_query($AdeudExisPago,$link) or die(mysql_error());
-                                                                if(mysql_num_rows($iny_AdeudExisPago) > 0){
-                                                                    $f_AdeudExisPago = mysql_fetch_row($iny_AdeudExisPago);
+                                                                $iny_AdeudExisPago = mysqli_query($mysqli,$AdeudExisPago) or die(mysqli_error());
+                                                                if(mysqli_num_rows($iny_AdeudExisPago) > 0){
+                                                                    $f_AdeudExisPago = mysqli_fetch_row($iny_AdeudExisPago);
                                                                     echo "<tr><td></td><td colspan='2'><span class='label label-warning'>Se capturo un adeudo debido a pago incompleto.</span></td><td>$".number_format(($f_AdeudExisPago[2]),2)."</td><td></td></tr>";
 
                                                                 }
@@ -1205,12 +1204,12 @@
                                                 <?php
                                                         //Consultar Adeudos
                                                         $conocer_adeudos_cargos = "select COALESCE(sum(monto),0) as total_cargos from adeudos WHERE tipo='cargo' and id_credito='".$fila_credito[0]."';";
-                                                        $iny_conocer_adeudos_cargos = mysql_query($conocer_adeudos_cargos,$link) or die(mysql_error());
-                                                        $fConocerAdeudosCargos = mysql_fetch_row($iny_conocer_adeudos_cargos);
+                                                        $iny_conocer_adeudos_cargos = mysqli_query($mysqli,$conocer_adeudos_cargos) or die(mysqli_error());
+                                                        $fConocerAdeudosCargos = mysqli_fetch_row($iny_conocer_adeudos_cargos);
 
                                                         $conocer_adeudos_abonos = "select COALESCE(sum(monto),0) as total_abonos from pagos WHERE tipo_pago='3' and id_credito='".$fila_credito[0]."';";
-                                                        $iny_conocer_adeudos_abonos = mysql_query($conocer_adeudos_abonos,$link) or die(mysql_error());
-                                                        $fConocerAdeudosAbonos = mysql_fetch_row($iny_conocer_adeudos_abonos);
+                                                        $iny_conocer_adeudos_abonos = mysqli_query($mysqli,$conocer_adeudos_abonos) or die(mysqli_error());
+                                                        $fConocerAdeudosAbonos = mysqli_fetch_row($iny_conocer_adeudos_abonos);
 
                                                         $totalSaldoAdeudos = $fConocerAdeudosCargos[0] - $fConocerAdeudosAbonos[0];
 
@@ -1220,9 +1219,9 @@
                                             <table class="table table-bordered">
                                                 <tr><th><center>Total Pagos de Interes</center></th></tr>
                                                 <?php
-                                                        $iny_conocer_intereses = mysql_query("select sum(monto) as intereses from pagos where id_credito='".$fila_credito[0]."' and tipo_pago=1;",$link)or die(mysql_error());
-                                                        if(mysql_num_rows($iny_conocer_intereses)>0){
-                                                             $fila_intereses = mysql_fetch_row($iny_conocer_intereses);
+                                                        $iny_conocer_intereses = mysqli_query($mysqli,"select sum(monto) as intereses from pagos where id_credito='".$fila_credito[0]."' and tipo_pago=1;")or die(mysqli_error());
+                                                        if(mysqli_num_rows($iny_conocer_intereses)>0){
+                                                             $fila_intereses = mysqli_fetch_row($iny_conocer_intereses);
                                                         }
                                                     ?>
                                             <tr><td><center><?php echo "$ ".number_format(($fila_intereses[0]),2); ?></center></td></tr>
@@ -1230,9 +1229,9 @@
                                         </div>
                                         <div class="col-xs-6">
                                             <?php
-                                                $iny_conocer_capital = mysql_query("select sum(monto) as pagos_capital from pagos where id_credito='".$fila_credito[0]."' and tipo_pago=2;",$link)or die(mysql_error());
-                                                if(mysql_num_rows($iny_conocer_capital)>0){
-                                                     $fila_capital = mysql_fetch_row($iny_conocer_capital);
+                                                $iny_conocer_capital = mysqli_query($mysqli,"select sum(monto) as pagos_capital from pagos where id_credito='".$fila_credito[0]."' and tipo_pago=2;")or die(mysqli_error());
+                                                if(mysqli_num_rows($iny_conocer_capital)>0){
+                                                     $fila_capital = mysqli_fetch_row($iny_conocer_capital);
                                                         if($fila_capital[0] == ""){
                                                             $suma_capital = 0;
                                                         }else{
@@ -1272,8 +1271,8 @@
                                                         <div id="shopping-cart-results">
                                                             <?php
                                                                 $conocer_pagos_sat = "select * from pagos_sat where id_credito=$id_credito;";
-                                                                $iny_conocer_pagos_sat = mysql_query($conocer_pagos_sat,$link) or die(mysql_error());
-                                                                if(mysql_num_rows($iny_conocer_pagos_sat)>0){
+                                                                $iny_conocer_pagos_sat = mysqli_query($mysqli,$conocer_pagos_sat) or die(mysqli_error());
+                                                                if(mysqli_num_rows($iny_conocer_pagos_sat)>0){
                                                                     echo '<table class="table table-bordered table-condensed">
                                                                             <thead>
                                                                                <th>No.</th>
@@ -1283,7 +1282,7 @@
                                                                             </thead><tbody>';
                                                                             $contador =1;
                                                                             $sumapagossat = 0;
-                                                                    while($fpagosat = mysql_fetch_array($iny_conocer_pagos_sat)){
+                                                                    while($fpagosat = mysqli_fetch_array($iny_conocer_pagos_sat)){
                                                                         echo "<tr><th scope='row'>$contador</th><td>".date("d/m/Y",strtotime($fpagosat[3]))."</td><td>$".number_format(($fpagosat[2]),2)."</td><td><a href='eliminar-pago-sat.php?idsat=$fpagosat[0]' type='button' class='btn btn-warning btn-xs'>Eliminar</a></td></tr>";
                                                                         $sumapagossat += $fpagosat[2];
                                                                         $contador++;
@@ -1390,12 +1389,12 @@
                                                         if($cantidadcouenta>0){
                                                             while($f_Inversionistas = mysqli_fetch_assoc($iny_ConocerInversionistas)){
                                                                 
-                                                                //$conocer_NombreInv = mysql_query("SELECT nombre from inversionistas where id_inversionistas=$f_InverAnt[1]",$link) or die(mysql_error());
-                                                                //$f_NombreInv = mysql_fetch_row($conocer_NombreInv);
+                                                                //$conocer_NombreInv = mysqli_query($mysqli,"SELECT nombre from inversionistas where id_inversionistas=$f_InverAnt[1]") or die(mysqli_error());
+                                                                //$f_NombreInv = mysqli_fetch_row($conocer_NombreInv);
                                                                 
                                                                 //Conocer Saldo Inversionista de Pagos realizados
-                                                                $ConEstCredInv = mysql_query("select sum(monto) from pinversionistas where id_credito=$id_credito and id_inversionista = ".$f_Inversionistas['id_inversionista']." and tipo_pago='capital';",$link)or die(mysql_error());
-                                                                $f_ConEstCredInv = mysql_fetch_row($ConEstCredInv);
+                                                                $ConEstCredInv = mysqli_query($mysqli,"select sum(monto) from pinversionistas where id_credito=$id_credito and id_inversionista = ".$f_Inversionistas['id_inversionista']." and tipo_pago='capital';")or die(mysqli_error());
+                                                                $f_ConEstCredInv = mysqli_fetch_row($ConEstCredInv);
                                                                 if(empty($f_ConEstCredInv[0])){
                                                                     $pagos = 0;
                                                                 }else{
@@ -1459,11 +1458,11 @@
                                                     <tr><td class='tdfontmini'><center><b>Inversionista</b></center></td><td class='tdfontmini'><center><b>Comentarios</b></center></td><td class='tdfontmini'><center><b>Fecha</b></center></td></tr>
                                                     <?php
                                                         $conocerInversionistaAnteriores = "select * from historial_inversionistas_creditos where id_credito=$fila_credito[0] order by fechahora desc;";
-                                                        $iny_ConInvAnt = mysql_query($conocerInversionistaAnteriores,$link) or die(mysql_error());
-                                                        if(mysql_num_rows($iny_ConInvAnt)>0){
-                                                            while($f_InverAnt = mysql_fetch_array($iny_ConInvAnt)){
-                                                                $conocer_NombreInv = mysql_query("SELECT nombre from inversionistas where id_inversionistas=$f_InverAnt[1]",$link) or die(mysql_error());
-                                                                $f_NombreInv = mysql_fetch_row($conocer_NombreInv);
+                                                        $iny_ConInvAnt = mysqli_query($mysqli,$conocerInversionistaAnteriores) or die(mysqli_error());
+                                                        if(mysqli_num_rows($iny_ConInvAnt)>0){
+                                                            while($f_InverAnt = mysqli_fetch_array($iny_ConInvAnt)){
+                                                                $conocer_NombreInv = mysqli_query($mysqli,"SELECT nombre from inversionistas where id_inversionistas=$f_InverAnt[1]") or die(mysqli_error());
+                                                                $f_NombreInv = mysqli_fetch_row($conocer_NombreInv);
 
                                                                 echo "<tr><td class='tdfontmini'>$f_NombreInv[0]</td><td class='tdfontmini'>$f_InverAnt[5]</td><td class='tdfontmini'>$f_InverAnt[4]</td></tr>";
                                                             }
@@ -1484,9 +1483,9 @@
                                                     <tr><td class='tdfontmini'><center><b>Interes</b></center></td><td class='tdfontmini'><center><b>Fecha de Registro</b></center></td></tr>
                                                     <?php
                                                         $q_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA = "SELECT * FROM histor_inter_inver_credit where id_credito=$fila_credito[0];";
-                                                        $i_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA = mysql_query($q_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA,$link) or die(mysql_error());
-                                                        if(mysql_num_rows($i_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA)>0){
-                                                            while($f_HISTO_INT_APAGAR_INVER = mysql_fetch_assoc($i_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA)){
+                                                        $i_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA = mysqli_query($mysqli,$q_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA) or die(mysqli_error());
+                                                        if(mysqli_num_rows($i_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA)>0){
+                                                            while($f_HISTO_INT_APAGAR_INVER = mysqli_fetch_assoc($i_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA)){
                                                                 
 
                                                                 echo "<tr><td class='tdfontmini'>".$f_HISTO_INT_APAGAR_INVER['interes']." %</td><td class='tdfontmini'>".$f_HISTO_INT_APAGAR_INVER['fecha_inicio']."</td></tr>";

@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -44,9 +44,9 @@
 			var calo= id;
 			
 			<?php
-				$conocer_en_juridico = mysql_query("select id_creditos from creditos where status=3;",$link) or die(mysql_error());
+				$conocer_en_juridico = mysqli_query($mysqli,"select id_creditos from creditos where status=3;") or die(mysqli_error());
 				echo "var myArr = [";
-				while ($fila_juridico_conocer = mysql_fetch_array($conocer_en_juridico)) {
+				while ($fila_juridico_conocer = mysqli_fetch_array($conocer_en_juridico)) {
 					echo "'$fila_juridico_conocer[0]',";
 				}
 					echo "];";
@@ -122,8 +122,8 @@
 							<?php
 								$id_credito = $_GET['id'];
 								$conocer_nombre_credito = "select clientes.nombres, clientes.apaterno, clientes.amaterno from clientes inner join creditos on creditos.id_cliente = clientes.id_clientes where creditos.id_creditos = $id_credito;";
-								$iny_conocer_nombre_credito = mysql_query($conocer_nombre_credito,$link)or die(mysql_error());
-								$fnombrecredito = mysql_fetch_row($iny_conocer_nombre_credito);
+								$iny_conocer_nombre_credito = mysqli_query($mysqli,$conocer_nombre_credito)or die(mysqli_error());
+								$fnombrecredito = mysqli_fetch_row($iny_conocer_nombre_credito);
 							?>
                                 <form class="form-horizontal" role="form" method="post" action="_registro_nuevo_pago_sat.php" enctype="multipart/form-data">
 

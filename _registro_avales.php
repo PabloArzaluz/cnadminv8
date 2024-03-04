@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -37,8 +37,8 @@
 						''
 						);";
 
-		$resultado= mysql_query($query,$link) or die(mysql_error());
-		$id_aval_insertado_1 = mysql_insert_id();
+		$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
+		$id_aval_insertado_1 = mysqli_insert_id();
 
 		if (is_uploaded_file($_FILES['comprobante-aval-1']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['comprobante-aval-1']['name']);
@@ -50,7 +50,7 @@
 			move_uploaded_file($_FILES['comprobante-aval-1']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update avales set comprobante_file='$ruta', comprobante_nombre ='$nombre_archivo_original' where id_avales = $id_aval_insertado_1;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 
 		if (is_uploaded_file($_FILES['identificacion-oficial-1']['tmp_name'])){
@@ -63,7 +63,7 @@
 			move_uploaded_file($_FILES['identificacion-oficial-1']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update avales set identificacion_file='$ruta', identificacion_nombre ='$nombre_archivo_original' where id_avales = $id_aval_insertado_1;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial,) or die(mysqli_error());
 		}
 
     }
@@ -94,8 +94,8 @@
 						'',
 						'');";
 
-		$resultado= mysql_query($query,$link) or die(mysql_error());
-		$id_aval_insertado_2 = mysql_insert_id();
+		$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
+		$id_aval_insertado_2 = mysqli_insert_id();
 
 		if (is_uploaded_file($_FILES['comprobante-aval-2']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['comprobante-aval-2']['name']);
@@ -107,7 +107,7 @@
 			move_uploaded_file($_FILES['comprobante-aval-2']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update avales set comprobante_file='$ruta', comprobante_nombre ='$nombre_archivo_original' where id_avales = $id_aval_insertado_2;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 
 		if (is_uploaded_file($_FILES['identificacion-oficial-2']['tmp_name'])){
@@ -120,7 +120,7 @@
 			move_uploaded_file($_FILES['identificacion-oficial-2']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update avales set identificacion_file='$ruta', identificacion_nombre ='$nombre_archivo_original' where id_avales = $id_aval_insertado_2;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 	}
 
@@ -150,8 +150,8 @@
 						'',
 						'');";
 
-		$resultado= mysql_query($query,$link) or die(mysql_error());
-		$id_aval_insertado_3 = mysql_insert_id();
+		$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
+		$id_aval_insertado_3 = mysqli_insert_id();
 
 		if (is_uploaded_file($_FILES['comprobante-aval-3']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['comprobante-aval-3']['name']);
@@ -163,7 +163,7 @@
 			move_uploaded_file($_FILES['comprobante-aval-3']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update avales set comprobante_file='$ruta', comprobante_nombre ='$nombre_archivo_original' where id_avales = $id_aval_insertado_3;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 
 		if (is_uploaded_file($_FILES['identificacion-oficial-3']['tmp_name'])){
@@ -176,7 +176,7 @@
 			move_uploaded_file($_FILES['identificacion-oficial-3']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update avales set identificacion_file='$ruta', identificacion_nombre ='$nombre_archivo_original' where id_avales = $id_aval_insertado_3;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 	}
 

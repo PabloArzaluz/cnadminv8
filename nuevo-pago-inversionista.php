@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -43,9 +43,9 @@
 			var calo= id;
 			
 			<?php
-				$conocer_en_juridico = mysql_query("select id_creditos from creditos where status=3;",$link) or die(mysql_error());
+				$conocer_en_juridico = mysqli_query($mysqli,"select id_creditos from creditos where status=3;") or die(mysqli_error());
 				echo "var myArr = [";
-				while ($fila_juridico_conocer = mysql_fetch_array($conocer_en_juridico)) {
+				while ($fila_juridico_conocer = mysqli_fetch_array($conocer_en_juridico)) {
 					echo "'$fila_juridico_conocer[0]',";
 				}
 					echo "];";

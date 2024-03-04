@@ -1,9 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	error_reporting(E_ALL); ini_set("display_errors", 1);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -23,8 +24,8 @@
 
 		$query_agregar_juridico = "INSERT INTO juridicos(id_credito, fecha_registro, usuario_registro, juzgado, expediente, etapaprocesal, convenios_path, convenios_file_name, comentarios) 
 									VALUES('$id_credito', '$fecha_registro', '$usuario_registro', '$juzgado', '$expediente', '$etapa_procesal', '', '', '$comentarios');";
-		$ini_query_agregar_juridico = mysql_query($query_agregar_juridico,$link) or die(mysql_error());
-		$last_id = mysql_insert_id($link);
+		$ini_query_agregar_juridico = mysqli_query($mysqli,$query_agregar_juridico) or die(mysqli_error());
+		$last_id = mysqli_insert_id($link);
 
 		//Carga de Archivo de Convenio
 		if (is_uploaded_file($_FILES['convenio']['tmp_name'])){
@@ -38,12 +39,12 @@
 			chmod($ruta,0777);
 			//Actualizar en BD el archivo
 			$actualizar_identificacion_oficial = "UPDATE juridicos set convenios_path='$ruta', convenios_file_name ='$nombre_archivo_original' where id_juridicos = $last_id;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 
 		//Al final modificar estatus del credito
 		$query_update_credito = "UPDATE creditos SET status='3' WHERE id_creditos = '$id_credito';";
-		$ini_query_agregar_juridico = mysql_query($query_update_credito,$link) or die(mysql_error());
+		$ini_query_agregar_juridico = mysqli_query($query_update_credito,$link) or die(mysqli_error());
 	}
 	
 	//Tipo de OPeracion // editar Juridico
@@ -59,7 +60,7 @@
 		$comentarios 		= $_POST['comentarios'];
 
 		$actualizar_info_juridico = "UPDATE juridicos SET juzgado='$juzgado', expediente = '$expediente', etapaprocesal='$etapa_procesal', comentarios='$comentarios' WHERE id_juridicos=$id_juridico;";
-		$iny_actualizar_info_juridico = mysql_query($actualizar_info_juridico,$link) or die(mysql_error());
+		$iny_actualizar_info_juridico = mysqli_query($mysqli,$actualizar_info_juridico) or die(mysqli_error());
 
 		if (is_uploaded_file($_FILES['convenio']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['convenio']['name']);
@@ -71,7 +72,7 @@
 			move_uploaded_file($_FILES['convenio']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "UPDATE juridicos set convenios_path='$ruta', convenios_file_name ='$nombre_archivo_original' where id_juridicos = $id_juridico;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 	}
 
@@ -86,7 +87,7 @@
     
     $query = "UPDATE creditos SET juzgado = '$juzgado',expediente = '$expediente',etapa_procesal = '$etapa_procesal', status='3',fecha_cierre_credito='$fecha' WHERE id_creditos = '$id_credito';";
 
-    $resultado= mysql_query($query,$link) or die(mysql_error());
+    $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 
     if (is_uploaded_file($_FILES['convenio']['tmp_name'])){
                 $archivo1 = explode(".",$_FILES['convenio']['name']);
@@ -98,7 +99,7 @@
                 move_uploaded_file($_FILES['convenio']['tmp_name'], $ruta);
                 chmod($ruta,0777);
                 echo $actualizar_identificacion_oficial = "update creditos set convenio_file='$ruta', convenio_nombre ='$nombre_archivo_original' where id_creditos=$id_credito;";
-                $iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+                $iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
             }
     
     

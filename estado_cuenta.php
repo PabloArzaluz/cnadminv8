@@ -1,6 +1,6 @@
 <?php
 	session_start(); // crea una sesion
-	//ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	date_default_timezone_set('America/Mexico_City');
 	setlocale(LC_ALL, 'es_MX.UTF-8');
 
@@ -8,7 +8,7 @@
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/funciones.php");
-	$link = Conecta();
+	
 	$date_actual = date("Y-m-d");
 	$hora = date('g:i:s A');
 
@@ -63,8 +63,8 @@
 	                    creditos.id_cliente = clientes.id_clientes
 	                    where creditos.id_creditos = '".strtolower($id_credito)."';
 	                ";
-			$credito = mysql_query($query,$link) or die(mysql_error());
-			$f_credito = mysql_fetch_row($credito);
+			$credito = mysqli_query($mysqli,$query) or die(mysqli_error());
+			$f_credito = mysqli_fetch_row($credito);
 
 
 		?>
@@ -101,10 +101,10 @@
 								<?php
 									//If the start date was modified, show advice of what is the start date.
 									$conocer_fechas_existentes = "SELECT * FROM historfechcredmodif WHERE idCredito = $id_credito ORDER BY fechaHoraModificacion ASC LIMIT 1;";
-									$iny_conocer_fechas_existentes = mysql_query($conocer_fechas_existentes,$link) or die(mysql_error());
+									$iny_conocer_fechas_existentes = mysqli_query($mysqli,$conocer_fechas_existentes) or die(mysqli_error());
 
-									if(mysql_num_rows($iny_conocer_fechas_existentes) > 0){
-										$fila_fecha = mysql_fetch_row($iny_conocer_fechas_existentes);
+									if(mysqli_num_rows($iny_conocer_fechas_existentes) > 0){
+										$fila_fecha = mysqli_fetch_row($iny_conocer_fechas_existentes);
 										echo "<span data-html='true' title='Fecha Original: $fila_fecha[3]' class='top' data-toggle='tooltip'><span class='badge badge-warning'>! No es la original</span>";
 									}
 
@@ -308,10 +308,10 @@
 						echo "<tr class='table-active'><td colspan='7'><center><h5>".strftime('%B-%Y',strtotime($FechaCredito))." <small>Fecha Pago: $fecha_pago_normal / Fecha Limite: $fecha_maxima_pago $cadena_tipo_pago</small></h5></center></td></tr>";
 						//Conocer si hay pagos, si los hay, mostrarlos y el respectivo adeudo, si no los hay mostrar pago segun fecha
 						$conocer_pagos_recibidos_mes = "SELECT * FROM pagos WHERE id_credito = '$f_credito[0]' AND MONTH(fecha_pago)='".date('m',strtotime($FechaCredito))."' AND YEAR(fecha_pago) = '".date('Y',strtotime($FechaCredito))."' and tipo_pago=1;";
-						$iny_conocer_pagos_recibidos = mysql_query($conocer_pagos_recibidos_mes,$link) or die(mysql_error());
-						if(mysql_num_rows($iny_conocer_pagos_recibidos) > 0 ){
+						$iny_conocer_pagos_recibidos = mysqli_query($mysqli,$conocer_pagos_recibidos_mes) or die(mysqli_error());
+						if(mysqli_num_rows($iny_conocer_pagos_recibidos) > 0 ){
 								//Si hay pagos recibidos
-								while($f_pagos = mysql_fetch_array($iny_conocer_pagos_recibidos)){
+								while($f_pagos = mysqli_fetch_array($iny_conocer_pagos_recibidos)){
 									echo "<tr >";
 
 									echo "<td><i class='fas fa-calendar-check'></i> Pago Recibido</td>";
@@ -351,8 +351,8 @@
 								}
 								//Conocer adeudos en pagos
 									$conocer_adeudos_pagos = "SELECT COALESCE(saldo_mes_intereses,0) FROM pagos WHERE MONTH(fecha_pago)='".date('m',strtotime($FechaCredito))."' AND YEAR(fecha_pago)='".date('Y',strtotime($FechaCredito))."' AND id_credito='".$f_credito[0]."' ORDER BY id_pagos DESC limit 1;";
-									$iny_ConocerAdeudosPagos = mysql_query($conocer_adeudos_pagos,$link) or die(mysql_error());
-									$f_ConocerAdeudosPagos = mysql_fetch_row($iny_ConocerAdeudosPagos);
+									$iny_ConocerAdeudosPagos = mysqli_query($mysqli,$conocer_adeudos_pagos) or die(mysqli_error());
+									$f_ConocerAdeudosPagos = mysqli_fetch_row($iny_ConocerAdeudosPagos);
 									if($f_ConocerAdeudosPagos[0] > 0){
 										//Hay adeudos, mostrar pagos y formlario de pago
 										echo "<tr>";

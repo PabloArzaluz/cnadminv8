@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -78,8 +78,8 @@
 								//Conocer Folio
 								$pago = $_GET['idpago'];
 								$conocer_pago = "SELECT * FROM pagos_vista_simple WHERE id_pagos = '$pago';";
-								$iny_conocer_pago = mysql_query($conocer_pago,$link) or die(mysql_error());
-								$fpago = mysql_fetch_array($iny_conocer_pago);
+								$iny_conocer_pago = mysqli_query($mysqli,$conocer_pago) or die(mysqli_error());
+								$fpago = mysqli_fetch_array($iny_conocer_pago);
 							?>
 							<div class="row">
 								<div class="col-lg-12">

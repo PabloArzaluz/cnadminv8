@@ -1,11 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/clientes_puntuales.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -70,7 +70,7 @@
 											<select name="usuario" id="credito" class="select2" required onchange="this.form.submit()">
 												<option value="">Seleccione un Usuario</option>
 													<?php
-															$iny_creditos = mysql_query("SELECT 
+															$iny_creditos = mysqli_query($mysqli,"SELECT 
                                                                 usuario.id_user,
 																usuario.username,
                                                                 usuario.email,
@@ -79,9 +79,9 @@
                                                                 usuario.apellidos
                                                             FROM
                                                                 usuario
-                                                            where usuario.status =1 AND id_user NOT IN (1);",$link) or die (mysql_error());
-															if(mysql_num_rows($iny_creditos) > 0){
-															  while($row = mysql_fetch_array($iny_creditos)){
+                                                            where usuario.status =1 AND id_user NOT IN (1);") or die (mysqli_error());
+															if(mysqli_num_rows($iny_creditos) > 0){
+															  while($row = mysqli_fetch_array($iny_creditos)){
 																echo "<option value='$row[0]'>$row[4] $row[5] ";
 																  
 																if($row[5] == 3){
@@ -105,8 +105,8 @@
 							<?php
 								if(isset($_GET['estado'])){
 									$conocer_datos_generales ="SELECT * FROM usuario where id_user = '".$_GET['usuario']."';";
-									$iny_conocer_datos_generales = mysql_query($conocer_datos_generales,$link) or die(mysql_error());
-									$f_ConocerDatosGenerales = mysql_fetch_assoc($iny_conocer_datos_generales);
+									$iny_conocer_datos_generales = mysqli_query($mysqli,$conocer_datos_generales) or die(mysqli_error());
+									$f_ConocerDatosGenerales = mysqli_fetch_assoc($iny_conocer_datos_generales);
 								}
 								
 
@@ -219,8 +219,8 @@
 					<?php
 					//Inicia Mostrar Permisos
 						if(isset($_GET['estado'])){
-							$conocerPermisos = mysql_query("SELECT * FROM permisos where idUsuario='".$_GET['usuario']."';",$link) or die(mysql_error());
-							$f_listaPermisos = mysql_fetch_assoc($conocerPermisos);
+							$conocerPermisos = mysqli_query($mysqli,"SELECT * FROM permisos where idUsuario='".$_GET['usuario']."';") or die(mysqli_error());
+							$f_listaPermisos = mysqli_fetch_assoc($conocerPermisos);
 					?>
 					<form action="_guarda_permisos.php" method="POST" name="editarpermisos">
 					<div class="row">

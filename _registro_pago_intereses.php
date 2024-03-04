@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	include("include/funciones.php");
 	if(!isset($_SESSION['id_usuario'])){
@@ -33,18 +33,18 @@
 
 	//Verificar Folio folio-fisico
 	$conocer_folio_existente = "select * from pagos where folio_fisico='$folio_fisico';";
-	$iny_conocer_folio_existente = mysql_query($conocer_folio_existente,$link) or die (mysql_error());
-	if(mysql_num_rows($iny_conocer_folio_existente) == 0){
+	$iny_conocer_folio_existente = mysqli_query($mysqli,$conocer_folio_existente) or die (mysqli_error());
+	if(mysqli_num_rows($iny_conocer_folio_existente) == 0){
 		//No existe folio, se procede a la insercion
 		//Pago Mensual de Intereses
 		//Verificar si hay pagos realizado en el mes seleccionado.
 		$conocer_pagos_recibidos_mes = "SELECT * FROM pagos WHERE id_credito = '$credito' AND MONTH(fecha_pago)='".$mes_seleccionado."' AND YEAR(fecha_pago) = '".$ano_seleccionado."' and tipo_pago=1;";
-		$iny_conocer_pagos_recibidos = mysql_query($conocer_pagos_recibidos_mes,$link) or die(mysql_error());
-		if(mysql_num_rows($iny_conocer_pagos_recibidos) > 0 ){
+		$iny_conocer_pagos_recibidos = mysqli_query($mysqli,$conocer_pagos_recibidos_mes) or die(mysqli_error());
+		if(mysqli_num_rows($iny_conocer_pagos_recibidos) > 0 ){
 			//Si hay pagosConocer si existen adeudos a la fecha aplicada, si lo hay procedera como pago de adeudo, enc aso conrario como pago normal
 			$conocer_adeudos_pagos = "SELECT COALESCE(SUM(saldo_mes_intereses),0) FROM pagos WHERE MONTH(fecha_pago)='".$mes_seleccionado."' AND YEAR(fecha_pago)='".$ano_seleccionado."' AND id_credito='".$credito."';";
-			$iny_ConocerAdeudosPagos = mysql_query($conocer_adeudos_pagos,$link) or die(mysql_error());
-			$f_ConocerAdeudosPagos = mysql_fetch_row($iny_ConocerAdeudosPagos);
+			$iny_ConocerAdeudosPagos = mysqli_query($mysqli,$conocer_adeudos_pagos) or die(mysqli_error());
+			$f_ConocerAdeudosPagos = mysqli_fetch_row($iny_ConocerAdeudosPagos);
 			
 			if($f_ConocerAdeudosPagos[0] > 0){
 				//Existen Adeudos
@@ -64,7 +64,7 @@
 						'$adeudo',
 						'$modulo_registro'
 					);";
-				$iny_insertar_pago = mysql_query($insertar_pago,$link) or die(mysql_error());
+				$iny_insertar_pago = mysqli_query($mysqli,$insertar_pago) or die(mysqli_error());
 				header('Location: pagos.php?info=1');
 			}else{
 				//no existen adeudos, registrar pago normal
@@ -88,7 +88,7 @@
 					'$adeudo',
 					'$modulo_registro'
 				);";
-			$iny_insertar_pago = mysql_query($insertar_pago,$link) or die(mysql_error());
+			$iny_insertar_pago = mysqli_query($mysqli,$insertar_pago) or die(mysqli_error());
 			header('Location: pagos.php?info=1');
 		}
 	}else{

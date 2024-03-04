@@ -1,10 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	error_reporting(E_ALL); ini_set("display_errors", 1);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 
 	RestringirAccesoModulosNoPermitidos("permiso_credito_editar_informacion_basica");
@@ -34,7 +35,7 @@
 								isseg = '$isseg'
 		 					WHERE id_creditos = '$id_credito';";
 
-		 $iny_actualizar_credito = mysql_query($actualizar_credito,$link) or die(mysql_error());
+		 $iny_actualizar_credito = mysqli_query($mysqli,$actualizar_credito) or die(mysqli_error());
 
 		 if (is_uploaded_file($_FILES['poder']['tmp_name'])){
 		 	$archivo1 = explode(".",$_FILES['poder']['name']);
@@ -46,7 +47,7 @@
 			move_uploaded_file($_FILES['poder']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update creditos set poder_file='$ruta', poder_nombre ='$nombre_archivo_original' where id_creditos='$id_credito';";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 
 		if (is_uploaded_file($_FILES['mutuo']['tmp_name'])){
@@ -59,7 +60,7 @@
 			move_uploaded_file($_FILES['mutuo']['tmp_name'], $ruta2);
 			chmod($ruta2,0777);
 			$actualizar_mutuo = "update creditos set mutuo_file='$ruta2', mutuo_nombre ='$nombre_archivo_original2' where id_creditos=$id_credito;";
-			$iny_consulta2 = mysql_query($actualizar_mutuo,$link) or die(mysql_error());
+			$iny_consulta2 = mysqli_query($mysqli,$actualizar_mutuo) or die(mysqli_error());
 		}
 
 		$ruta = "detalle-credito.php?info=2&id=".$id_credito;

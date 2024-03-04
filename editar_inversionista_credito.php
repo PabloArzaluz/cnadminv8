@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -72,12 +72,12 @@
 						$id_creditos = $_GET['id'];
 						
 						$conocer_inversionista = "select * from inversionistas where id_inversionistas=(select id_inversionista from creditos where id_creditos = $id_creditos);"; 
-                        $iny_consultar_inversionista = mysql_query($conocer_inversionista, $link) or die (mysql_error());
-                        $fila_inversionista = mysql_fetch_row($iny_consultar_inversionista);
+                        $iny_consultar_inversionista = mysqli_query($mysqli,$conocer_inversionista) or die (mysqli_error());
+                        $fila_inversionista = mysqli_fetch_row($iny_consultar_inversionista);
 
                         $conocer_creditos = "select * from creditos where id_creditos=$id_creditos;"; 
-                        $iny_consultar_creditos = mysql_query($conocer_creditos, $link) or die (mysql_error());
-                        $fila_creditos = mysql_fetch_row($iny_consultar_creditos);
+                        $iny_consultar_creditos = mysqli_query($mysqli,$conocer_creditos) or die (mysqli_error());
+                        $fila_creditos = mysqli_fetch_row($iny_consultar_creditos);
 					?>
 
 					<div class="widget">
@@ -104,9 +104,9 @@
 														<select name="inversionista" id="select2" class="select2" required>
 															<option value="">Seleccione un Inversionista</option>
 															<?php
-															$iny_clientes = mysql_query("select * from inversionistas where status='activo';",$link) or die (mysql_error());
-															if(mysql_num_rows($iny_clientes) > 0){
-															  while($row = mysql_fetch_array($iny_clientes)){
+															$iny_clientes = mysqli_query($mysqli,"select * from inversionistas where status='activo';") or die (mysqli_error());
+															if(mysqli_num_rows($iny_clientes) > 0){
+															  while($row = mysqli_fetch_array($iny_clientes)){
 																echo "<option value='$row[0]'";
 																if($fila_inversionista[0] == $row[0]){
 																	echo " selected ";

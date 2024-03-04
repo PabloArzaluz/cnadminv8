@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -54,9 +54,9 @@
 				'',
 				'')";
 
-    			$resultado= mysql_query($query,$link) or die(mysql_error());
+    			$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 
-				$id_cliente_insertado = mysql_insert_id();
+				$id_cliente_insertado = mysqli_insert_id();
 
 
 		if (is_uploaded_file($_FILES['file1']['tmp_name'])){
@@ -69,7 +69,7 @@
 			move_uploaded_file($_FILES['file1']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update inmuebles set ruta_archivo1='$ruta', nombre_archivo1 ='$nombre_archivo_original' where id_inmuebles = $id_cliente_insertado;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 		if (is_uploaded_file($_FILES['file2']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['file2']['name']);
@@ -81,7 +81,7 @@
 			move_uploaded_file($_FILES['file2']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update inmuebles set ruta_archivo2='$ruta', nombre_archivo2 ='$nombre_archivo_original' where id_inmuebles = $id_cliente_insertado;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 		if (is_uploaded_file($_FILES['file3']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['file3']['name']);
@@ -93,7 +93,7 @@
 			move_uploaded_file($_FILES['file3']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update inmuebles set ruta_archivo3='$ruta', nombre_archivo3 ='$nombre_archivo_original' where id_inmuebles = $id_cliente_insertado;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 		if (is_uploaded_file($_FILES['file4']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['file4']['name']);
@@ -105,7 +105,7 @@
 			move_uploaded_file($_FILES['file4']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update inmuebles set ruta_archivo4='$ruta', nombre_archivo4 ='$nombre_archivo_original' where id_inmuebles = $id_cliente_insertado;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 		if (is_uploaded_file($_FILES['file5']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['file5']['name']);
@@ -117,7 +117,7 @@
 			move_uploaded_file($_FILES['file5']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update inmuebles set ruta_archivo5='$ruta', nombre_archivo5 ='$nombre_archivo_original' where id_inmuebles = $id_cliente_insertado;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 		if (is_uploaded_file($_FILES['file6']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['file6']['name']);
@@ -129,7 +129,7 @@
 			move_uploaded_file($_FILES['file6']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update inmuebles set ruta_archivo6='$ruta', nombre_archivo6 ='$nombre_archivo_original' where id_inmuebles = $id_cliente_insertado;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 		if (is_uploaded_file($_FILES['file7']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['file7']['name']);
@@ -141,7 +141,7 @@
 			move_uploaded_file($_FILES['file7']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update inmuebles set ruta_archivo7='$ruta', nombre_archivo7 ='$nombre_archivo_original' where id_inmuebles = $id_cliente_insertado;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 		if (is_uploaded_file($_FILES['file8']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['file8']['name']);
@@ -153,7 +153,7 @@
 			move_uploaded_file($_FILES['file8']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update inmuebles set ruta_archivo8='$ruta', nombre_archivo8 ='$nombre_archivo_original' where id_inmuebles = $id_cliente_insertado;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 		if (is_uploaded_file($_FILES['file9']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['file9']['name']);
@@ -165,7 +165,7 @@
 			move_uploaded_file($_FILES['file9']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update inmuebles set ruta_archivo9='$ruta', nombre_archivo9 ='$nombre_archivo_original' where id_inmuebles = $id_cliente_insertado;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 		if (is_uploaded_file($_FILES['file10']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['file10']['name']);
@@ -177,7 +177,7 @@
 			move_uploaded_file($_FILES['file10']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update inmuebles set ruta_archivo10='$ruta', nombre_archivo10 ='$nombre_archivo_original' where id_inmuebles = $id_cliente_insertado;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 
 		if (isset($_POST['info']) && $_POST['info'] == '1'){

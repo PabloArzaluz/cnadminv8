@@ -1,20 +1,20 @@
 <?php
  
 echo '<select class="form-control" name="credito" id="credito">';
-ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+include("include/configuration.php");
 include("../conf/conecta.inc.php");
 include("../conf/config.inc.php");
-$link = Conecta();
+
 $consulta= "SELECT creditos.id_creditos,creditos.id_inversionista,clientes.nombres,clientes.apaterno,clientes.amaterno,creditos.fecha_prestamo,creditos.monto,creditos.folio FROM creditos INNER JOIN clientes on clientes.id_clientes = creditos.id_cliente ORDER BY creditos.folio desc;"; 
-$resultado= mysql_query($consulta,$link) or die (mysql_error());
+$resultado= mysqli_query($mysqli,$consulta) or die (mysqli_error());
 ?>
 <option value="">Seleccione un Credito</option>
 <?php
-while($fila = mysql_fetch_array($resultado)){
+while($fila = mysqli_fetch_array($resultado)){
 	//CONOCER SALDO CREDITOS
 	$conocer_pagos_inversionista = "SELECT SUM(monto) FROM pinversionistas WHERE TIPO_PAGO='capital' AND id_credito = ".$fila[0].";";
-	$iny_conocer_pagos_inversionista  = mysql_query($conocer_pagos_inversionista,$link) or die(mysql_error());
-	$f_SumaPagoInversionista = mysql_fetch_row($iny_conocer_pagos_inversionista);
+	$iny_conocer_pagos_inversionista  = mysqli_query($mysqli,$conocer_pagos_inversionista) or die(mysqli_error());
+	$f_SumaPagoInversionista = mysqli_fetch_row($iny_conocer_pagos_inversionista);
 	$monto_credito = $fila[6];
 	$saldoRestante = $monto_credito - $f_SumaPagoInversionista[0];
 	//FIN SALDO CREDITOS

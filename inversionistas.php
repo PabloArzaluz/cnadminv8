@@ -1,11 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
 	date_default_timezone_set('America/Mexico_City');
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -65,16 +65,16 @@
 							$mesAnterior = fecha_meses("-1");
 							$MesActual = date("m");
 							$PagosMesInvActual = "select sum(monto) from pinversionistas where MONTH(fecha_captura) = $MesActual;";
-							$inyPagosMesInvActual = mysql_query($PagosMesInvActual,$link) or die(mysql_error());
-							$fPagosMesInvActual = mysql_fetch_row($inyPagosMesInvActual);
+							$inyPagosMesInvActual = mysqli_query($mysqli,$PagosMesInvActual) or die(mysqli_error());
+							$fPagosMesInvActual = mysqli_fetch_row($inyPagosMesInvActual);
 							
 							$PagosMesInvAnterior = "select sum(monto) from pinversionistas where MONTH(fecha_captura) = $mesAnterior;";
-							$inyPagosMesInvAnterior = mysql_query($PagosMesInvAnterior,$link) or die(mysql_error());
-							$fPagosMesInvAnterior = mysql_fetch_row($inyPagosMesInvAnterior);
+							$inyPagosMesInvAnterior = mysqli_query($mysqli,$PagosMesInvAnterior) or die(mysqli_error());
+							$fPagosMesInvAnterior = mysqli_fetch_row($inyPagosMesInvAnterior);
 							
 							$PagosInvCapital = "select sum(monto) from pinversionistas where MONTH(fecha_captura) = $MesActual and tipo_pago = 'capital';";
-							$inyPagosInvCapital = mysql_query($PagosInvCapital,$link) or die(mysql_error());
-							$fPagosInvCapital = mysql_fetch_row($inyPagosInvCapital);
+							$inyPagosInvCapital = mysqli_query($mysqli,$PagosInvCapital) or die(mysqli_error());
+							$fPagosInvCapital = mysqli_fetch_row($inyPagosInvCapital);
 						?>
 						<div class="col-md-6 col-sm-6">
 							<div class="number-chart">
@@ -98,14 +98,14 @@
 							<div class="number-chart">
 							<?php
 									$conocer_capital_actual = "select sum(monto) from creditos where creditos.status=1 and id_inversionista <> 1;";
-									$iny_conocer_capital_actual = mysql_query($conocer_capital_actual,$link) or die (mysql_error());
-									$fCapitalActual = mysql_fetch_row($iny_conocer_capital_actual);
+									$iny_conocer_capital_actual = mysqli_query($mysqli,$conocer_capital_actual) or die (mysqli_error());
+									$fCapitalActual = mysqli_fetch_row($iny_conocer_capital_actual);
 									$fCapitalActual[0];
 
 									$conocer_pagos_capital = "select distinct id_pinversionistas,(pinversionistas.monto) from pinversionistas inner join creditos on creditos.id_inversionista = pinversionistas.id_inversionista 
 																where creditos.status=1 and pinversionistas.tipo_pago=  'capital'; ";
-									$iny_conocer_pagos_capital = mysql_query($conocer_pagos_capital,$link) or die (mysql_error());
-									$fPagosCapital = mysql_fetch_row($iny_conocer_pagos_capital);
+									$iny_conocer_pagos_capital = mysqli_query($mysqli,$conocer_pagos_capital) or die (mysqli_error());
+									$fPagosCapital = mysqli_fetch_row($iny_conocer_pagos_capital);
 									$fPagosCapital[1];
 									$TotalCapital = $fCapitalActual[0] - $fPagosCapital[1];
 								?>
@@ -187,9 +187,9 @@
 								<tbody>
 									<?php
 										//Consulta Cientes
-										$iny_clientes = mysql_query("select * from inversionistas where status='activo';",$link) or die (mysql_error());
-										if(mysql_num_rows($iny_clientes) > 0){
-							              while($row = mysql_fetch_array($iny_clientes)){
+										$iny_clientes = mysqli_query($mysqli,"select * from inversionistas where status='activo';") or die (mysqli_error());
+										if(mysqli_num_rows($iny_clientes) > 0){
+							              while($row = mysqli_fetch_array($iny_clientes)){
 							                echo "<tr>
                                             <td> <a href='detalle-inversionista.php?id=$row[0]'>".$row[1]."</a></td>
 							                <td>";

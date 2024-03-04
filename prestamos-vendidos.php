@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -105,7 +105,7 @@
 								<tbody>
 									<?php
 										//Consulta Cientes
-										$iny_clientes = mysql_query("SELECT
+										$iny_clientes = mysqli_query($mysqli,"SELECT
 	creditos.id_creditos,
     clientes.nombres,
     clientes.apaterno,
@@ -121,9 +121,9 @@ FROM
 INNER JOIN
 	clientes
 ON
-	creditos.id_cliente = clientes.id_clientes WHERE creditos.status = 4;",$link) or die (mysql_error());
-										if(mysql_num_rows($iny_clientes) > 0){
-							              while($row = mysql_fetch_array($iny_clientes)){
+	creditos.id_cliente = clientes.id_clientes WHERE creditos.status = 4;") or die (mysqli_error());
+										if(mysqli_num_rows($iny_clientes) > 0){
+							              while($row = mysqli_fetch_array($iny_clientes)){
 							                echo "<tr>
 							                <td>".$row[9]."</td>
 							                <td> ".$row[1]." ".$row[2]." ".$row[3]."</td>
@@ -142,8 +142,8 @@ ON
 												echo "<span class='label label-warning'>Vendido</span>";
 											}
                                             $conocerSaldoRestante = "SELECT sum(monto) from pagos where id_credito= $row[0] and tipo_pago= 2;";
-                                            $iny_conocerSaldoRestante = mysql_query($conocerSaldoRestante,$link) or die(mysql_error());
-				                            $fSaldoRestante = mysql_fetch_row($iny_conocerSaldoRestante);
+                                            $iny_conocerSaldoRestante = mysqli_query($mysqli,$conocerSaldoRestante) or die(mysqli_error());
+				                            $fSaldoRestante = mysqli_fetch_row($iny_conocerSaldoRestante);
 
 				                            $saldoRestante = $row[6] - $fSaldoRestante[0];
 

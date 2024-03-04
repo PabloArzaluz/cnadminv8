@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -65,8 +65,8 @@
 						<?php
 							$id_cliente = $_GET['id'];
 							$consultar_informacion = "select * from clientes where id_clientes='".$_GET['id']."';";
-							$iny_query = mysql_query($consultar_informacion,$link) or die(mysql_error());
-							$fila_informacion = mysql_fetch_row($iny_query);
+							$iny_query = mysqli_query($mysqli,$consultar_informacion) or die(mysqli_error());
+							$fila_informacion = mysqli_fetch_row($iny_query);
 						?>
 						<div class="tab-pane profile active" id="profile-tab">
 							<div class="row">
@@ -158,9 +158,9 @@
 								<tbody>
 									<?php
 										//Consulta Pagos
-										$iny_pagos = mysql_query("SELECT * FROM creditos WHERE id_cliente=$id_cliente order by fecha_prestamo desc;",$link) or die (mysql_error());
-										if(mysql_num_rows($iny_pagos) > 0){
-							              while($row = mysql_fetch_array($iny_pagos)){
+										$iny_pagos = mysqli_query($mysqli,"SELECT * FROM creditos WHERE id_cliente=$id_cliente order by fecha_prestamo desc;") or die (mysqli_error());
+										if(mysqli_num_rows($iny_pagos) > 0){
+							              while($row = mysqli_fetch_array($iny_pagos)){
 							                echo "<tr><td>";
 											if($row[12] == 1){
                                                 echo "<span class='label label-success'>Activo</span>";

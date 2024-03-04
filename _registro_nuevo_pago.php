@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	include("include/functions.php");
 	include("include/funciones.php");
@@ -26,8 +26,8 @@
     
 	//Verificar Folio folio-fisico
 	$conocer_folio_existente = "select * from pagos where folio_fisico='$folio_fisico';";
-	$iny_conocer_folio_existente = mysql_query($conocer_folio_existente,$link) or die (mysql_error());
-	if(mysql_num_rows($iny_conocer_folio_existente) == 0){
+	$iny_conocer_folio_existente = mysqli_query($mysqli,$conocer_folio_existente) or die (mysqli_error());
+	if(mysqli_num_rows($iny_conocer_folio_existente) == 0){
 		//No existe folio, se procede a la insercion
 		if($tipo_pago == 1){
 			//Pago Mensual de Intereses
@@ -52,7 +52,7 @@
 						'$modulo_registro',
 						'$metodo_pago'
 					);";
-				$iny_insertar_pago = mysql_query($insertar_pago,$link) or die(mysql_error());
+				$iny_insertar_pago = mysqli_query($mysqli,$insertar_pago) or die(mysqli_error());
 				$insertar_adeudo = "INSERT into adeudos(id_credito,monto,tipo,datetimecaptura,folio_fisico,fecha_aplicacion,comentarios,id_usuario) values (
 						'$credito',
 						'$adeudo',
@@ -63,7 +63,7 @@
 						'$comentarios',
 						'$usuario_captura'
 					);";
-				$iny_insertar_adeudo = mysql_query($insertar_adeudo,$link) or die(mysql_error());
+				$iny_insertar_adeudo = mysqli_query($mysqli,$insertar_adeudo) or die(mysqli_error());
 				header('Location: pagos.php?info=1');
 			}else{
 				//Pago mayor o igual se capturara de manera regular
@@ -84,7 +84,7 @@
 						'$modulo_registro',
 						'$metodo_pago'
 					);";
-				$iny_insertar_pago = mysql_query($insertar_pago,$link) or die(mysql_error());
+				$iny_insertar_pago = mysqli_query($mysqli,$insertar_pago) or die(mysqli_error());
 				header('Location: pagos.php?info=1');
 			}
 		}
@@ -105,7 +105,7 @@
 					'$modulo_registro',
 					'$metodo_pago'
 	                );";
-		    $resultado= mysql_query($query,$link) or die(mysql_error());
+		    $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 			header('Location: pagos.php?info=1');
 		}
 	}else{

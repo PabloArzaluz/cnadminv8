@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	setlocale(LC_ALL, 'es_MX.UTF-8');
 	if(!isset($_SESSION['id_usuario'])){
@@ -51,9 +51,9 @@
 			var calo= id;
 			
 			<?php
-				$conocer_en_juridico = mysql_query("select id_creditos from creditos where status=3;",$link) or die(mysql_error());
+				$conocer_en_juridico = mysqli_query($mysqli,"select id_creditos from creditos where status=3;") or die(mysqli_error());
 				echo "var myArr = [";
-				while ($fila_juridico_conocer = mysql_fetch_array($conocer_en_juridico)) {
+				while ($fila_juridico_conocer = mysqli_fetch_array($conocer_en_juridico)) {
 					echo "'$fila_juridico_conocer[0]',";
 				}
 					echo "];";
@@ -179,7 +179,7 @@
 											<select disabled name="credito" id="credito" class="select2" required onchange="alertaCreditoJuridico(this.value)">
 												<option value="">Todos</option>
 													<?php
-															$iny_creditos = mysql_query("SELECT 
+															$iny_creditos = mysqli_query($mysqli,"SELECT 
                                                                 creditos.id_creditos,
                                                                 clientes.nombres,
                                                                 clientes.apaterno,
@@ -196,9 +196,9 @@
                                                                 clientes
                                                             ON
                                                                 creditos.id_cliente = clientes.id_clientes
-                                                                where creditos.status = 1 OR creditos.status =3 ;",$link) or die (mysql_error());
-															if(mysql_num_rows($iny_creditos) > 0){
-															  while($row = mysql_fetch_array($iny_creditos)){
+                                                                where creditos.status = 1 OR creditos.status =3 ;") or die (mysqli_error());
+															if(mysqli_num_rows($iny_creditos) > 0){
+															  while($row = mysqli_fetch_array($iny_creditos)){
 																echo "<option value='$row[0]'>[#$row[9]] $row[1] $row[2] $row[3] (FP: ".date("d/m/Y",strtotime($row[4])).") ";
 																  
 																if($row[5] == 3){
@@ -221,7 +221,7 @@
 											<select disabled name="credito" id="credito" class="select2" required onchange="alertaCreditoJuridico(this.value)">
 												<option value="">Todos</option>
 													<?php
-															$iny_creditos = mysql_query("SELECT 
+															$iny_creditos = mysqli_query($mysqli,"SELECT 
                                                                 creditos.id_creditos,
                                                                 clientes.nombres,
                                                                 clientes.apaterno,
@@ -238,9 +238,9 @@
                                                                 clientes
                                                             ON
                                                                 creditos.id_cliente = clientes.id_clientes
-                                                                where creditos.status = 1 OR creditos.status =3 ;",$link) or die (mysql_error());
-															if(mysql_num_rows($iny_creditos) > 0){
-															  while($row = mysql_fetch_array($iny_creditos)){
+                                                                where creditos.status = 1 OR creditos.status =3 ;") or die (mysqli_error());
+															if(mysqli_num_rows($iny_creditos) > 0){
+															  while($row = mysqli_fetch_array($iny_creditos)){
 																echo "<option value='$row[0]'>[#$row[9]] $row[1] $row[2] $row[3] (FP: ".date("d/m/Y",strtotime($row[4])).") ";
 																  
 																if($row[5] == 3){
@@ -293,9 +293,9 @@
 												<option value="100">Efectivo</option>
 												<option value="300">Todos los Bancos</option>
 												<?php
-													$iny_creditos = mysql_query("SELECT * FROM cuentas_bancarias_pago where status = 1;",$link) or die (mysql_error());
-													if(mysql_num_rows($iny_creditos) > 0){
-														while($row = mysql_fetch_array($iny_creditos)){
+													$iny_creditos = mysqli_query($mysqli,"SELECT * FROM cuentas_bancarias_pago where status = 1;") or die (mysqli_error());
+													if(mysqli_num_rows($iny_creditos) > 0){
+														while($row = mysqli_fetch_array($iny_creditos)){
 															echo "<option value='$row[0]'>[Banco: $row[1]] Titular: $row[2] (Cuenta: $row[3]) ";
 															echo "</option>";
 														}
@@ -328,9 +328,9 @@
 											<select class="form-control" name="inversionista" id="inversionista">
 												<option value="">Todos</option>
 												<?php
-													$iny_creditos = mysql_query("SELECT * FROM inversionistas where status = 'activo' order by nombre asc;",$link) or die (mysql_error());
-													if(mysql_num_rows($iny_creditos) > 0){
-														while($row = mysql_fetch_array($iny_creditos)){
+													$iny_creditos = mysqli_query($mysqli,"SELECT * FROM inversionistas where status = 'activo' order by nombre asc;") or die (mysqli_error());
+													if(mysqli_num_rows($iny_creditos) > 0){
+														while($row = mysqli_fetch_array($iny_creditos)){
 															echo "<option value='$row[0]'>$row[1]";
 															echo "</option>";
 														}
@@ -482,8 +482,8 @@
 								
 								//echo "solo 1 metodo";
 							}*/
-							$iny_consulta = mysql_query($consulta_perrona,$link) or die (mysql_error());
-							if(mysql_num_rows($iny_consulta) > 0){
+							$iny_consulta = mysqli_query($mysqli,$consulta_perrona) or die (mysqli_error());
+							if(mysqli_num_rows($iny_consulta) > 0){
 								echo '
 								<div class="widget widget-table">
 								<div class="widget-header">
@@ -510,7 +510,7 @@
 											<tbody>
 								';
 								$suma = 0;
-								while($row = mysql_fetch_assoc($iny_consulta)){
+								while($row = mysqli_fetch_assoc($iny_consulta)){
 									$suma += $row['monto'];
 									echo '
 									<tr>

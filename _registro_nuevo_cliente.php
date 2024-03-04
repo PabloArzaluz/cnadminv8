@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -97,11 +97,11 @@
 				'$telefonotrabajo',
 				'$categoria')";
 
-    			$resultado= mysql_query($query,$link) or die(mysql_error());
+    			$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 
 
 
-				$id_cliente = mysql_insert_id();
+				$id_cliente = mysqli_insert_id();
 
 
 
@@ -127,7 +127,7 @@
 
 			$actualizar_identificacion_oficial = "update clientes set file_identificacion='$ruta', nombre_identificacion ='$nombre_archivo_original' where id_clientes=$id_cliente;";
 
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 
 		}
 
@@ -153,7 +153,7 @@
 
 			$upd = "update clientes set file_comprobantedomicilio='$ruta',nombre_comprobantedomicilio = '$nombre_archivo_original' where id_clientes=$id_cliente;";
 
-			$iny_consulta = mysql_query($upd,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$upd) or die(mysqli_error());
 
 		}
 

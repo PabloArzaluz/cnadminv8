@@ -1,10 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	error_reporting(E_ALL); ini_set("display_errors", 1);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -115,13 +116,13 @@
 
 									<?php
 										//Consulta Cientes
-										$iny_clientes = mysql_query("select * from clientes where status='activo';",$link) or die (mysql_error());
-										if(mysql_num_rows($iny_clientes) > 0){
-							              while($row = mysql_fetch_array($iny_clientes)){
+										$iny_clientes = mysqli_query($mysqli,"select * from clientes where status='activo';") or die (mysqli_error());
+										if(mysqli_num_rows($iny_clientes) > 0){
+							              while($row = mysqli_fetch_array($iny_clientes)){
 												$nombre_completo = $row[1]." ".$row[2]." ".$row[3];
 												$conocer_creditos = "SELECT  (SELECT COUNT(*)FROM   creditos where id_cliente = '".$row[0]."') AS total_creditos,(SELECT COUNT(*)FROM creditos where id_cliente = '".$row[0]."' and status= 1) AS total_activos,(SELECT COUNT(*)FROM creditos where id_cliente = '".$row[0]."' and status= 3) AS total_juridico;";
-                                           		$iny_conocer_creditos = mysql_query($conocer_creditos,$link) or die(mysql_error());
-				                            	$fcreditos = mysql_fetch_row($iny_conocer_creditos); 
+                                           		$iny_conocer_creditos = mysqli_query($mysqli,$conocer_creditos) or die(mysqli_error());
+				                            	$fcreditos = mysqli_fetch_row($iny_conocer_creditos); 
 							                if($fcreditos[2] > 0){
 							                	echo "<tr class='danger'>";
 							                }else{

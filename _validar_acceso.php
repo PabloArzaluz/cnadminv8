@@ -1,6 +1,6 @@
 <?php
 	session_start(); // crea una sesion
-	error_reporting(E_ALL); ini_set("display_errors", 1);
+	include("include/configuration.php");
 	
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");

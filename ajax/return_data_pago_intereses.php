@@ -1,13 +1,13 @@
 <?php
 
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	date_default_timezone_set('America/Mexico_City');
 	setlocale(LC_ALL, 'es_MX.UTF-8');
 
 	include("../conf/conecta.inc.php");
 	include("../conf/config.inc.php");
-	$link = Conecta();
+	
     if($_REQUEST){
         $monto 	= $_REQUEST['monto']; //monto
         $tipoPago 	= $_REQUEST['tipo']; //tipo de PAgo
@@ -22,8 +22,8 @@
                                     creditos c
                                 LEFT JOIN
                                     pagos p ON c.id_creditos = p.id_credito where id_creditos=$credito";
-        $iny_InformacionCredito = mysql_query($InformacionCredito, $link) or die(mysql_error());
-        $f_InformacionCredito = mysql_fetch_assoc($iny_InformacionCredito); 
+        $iny_InformacionCredito = mysqli_query($mysqli,$InformacionCredito) or die(mysqli_error());
+        $f_InformacionCredito = mysqli_fetch_assoc($iny_InformacionCredito); 
         $monto_a_pagar_regular = ($f_InformacionCredito["saldo_credito"]/100)*$f_InformacionCredito["interes"];
         $excedente = $monto - $monto_a_pagar_regular;
         

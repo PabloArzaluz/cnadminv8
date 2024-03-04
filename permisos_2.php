@@ -1,11 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/clientes_puntuales.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -80,7 +80,7 @@
 							 ?>
 							<?php
 								//Conocer los ultimos 3 meses
-								$query = mysql_query("
+								$query = mysqli_query($mysqli,"
 								SELECT usuario.id_user AS IdUsuarioUser, username, level, nombre, apellidos, 
 									permisos.idUsuario AS permisoUser, 
 									permiso_pagos,
@@ -106,7 +106,7 @@
 									LEFT JOIN
 									permisos
 									ON usuario.id_user = permisos.idUsuario WHERE usuario.status = 1 AND level <> 5;
-								",$link) or die(mysql_error());
+								") or die(mysqli_error());
 								echo '<div class="table-responsive">';	
 								echo '<table class="table">';
 								echo "<thead>
@@ -136,8 +136,8 @@
 								<th>permiso_dashboard_indicador_creditosmes</th>
 								</thead>";
 								echo "<tbody>";
-								if(mysql_num_rows($query) > 0){
-									while($row = mysql_fetch_assoc($query)){
+								if(mysqli_num_rows($query) > 0){
+									while($row = mysqli_fetch_assoc($query)){
 										echo "<tr>";
 										echo "<td>".$row['IdUsuarioUser']."-".$row['permisoUser']."</td>";
 										echo "<td>".$row['level']."</td>";

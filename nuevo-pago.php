@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	setlocale(LC_ALL, 'es_MX.UTF-8');
 	if(!isset($_SESSION['id_usuario'])){
@@ -50,16 +50,16 @@
 			var caloVend= id;
 			
 			<?php
-				$conocer_en_juridico = mysql_query("select id_creditos from creditos where status=3 ;",$link) or die(mysql_error());
+				$conocer_en_juridico = mysqli_query($mysqli,"select id_creditos from creditos where status=3 ;") or die(mysqli_error());
 				echo "var myArrJur = [";
-				while ($fila_juridico_conocer = mysql_fetch_array($conocer_en_juridico)) {
+				while ($fila_juridico_conocer = mysqli_fetch_array($conocer_en_juridico)) {
 					echo "'$fila_juridico_conocer[0]',";
 				}
 					echo "];";
 				//Vendido
-				$conocer_vendido = mysql_query("select id_creditos from creditos where status=4 ;",$link) or die(mysql_error());
+				$conocer_vendido = mysqli_query($mysqli,"select id_creditos from creditos where status=4 ;") or die(mysqli_error());
 				echo "var myArrVend= [";
-				while ($fila_vendido_conocer = mysql_fetch_array($conocer_vendido)) {
+				while ($fila_vendido_conocer = mysqli_fetch_array($conocer_vendido)) {
 					echo "'$fila_vendido_conocer[0]',";
 				}
 					echo "];";
@@ -203,7 +203,7 @@
 															//Permitido Eliminar Solo ID de Usuario 1y 3
 															if($_SESSION['id_usuario'] == 1 || $_SESSION['id_usuario'] == 3){
 																//Permitidos para Agregar pagos en Vendidos
-																$iny_creditos = mysql_query("SELECT 
+																$iny_creditos = mysqli_query($mysqli,"SELECT 
                                                                 creditos.id_creditos,
                                                                 clientes.nombres,
                                                                 clientes.apaterno,
@@ -220,9 +220,9 @@
                                                                 clientes
                                                             ON
                                                                 creditos.id_cliente = clientes.id_clientes
-                                                                where creditos.status = 1 OR creditos.status =3 OR creditos.status=4;",$link) or die (mysql_error());
-																if(mysql_num_rows($iny_creditos) > 0){
-																	while($row = mysql_fetch_array($iny_creditos)){
+                                                                where creditos.status = 1 OR creditos.status =3 OR creditos.status=4;") or die (mysqli_error());
+																if(mysqli_num_rows($iny_creditos) > 0){
+																	while($row = mysqli_fetch_array($iny_creditos)){
 																		echo "<option value='$row[0]'>[#$row[9]] $row[1] $row[2] $row[3] (FP: ".date("d/m/Y",strtotime($row[4])).") ";
 																		
 																		if($row[5] == 3){
@@ -235,7 +235,7 @@
 																	}
 																}
 															}else{
-																$iny_creditos = mysql_query("SELECT 
+																$iny_creditos = mysqli_query($mysqli,"SELECT 
                                                                 creditos.id_creditos,
                                                                 clientes.nombres,
                                                                 clientes.apaterno,
@@ -252,9 +252,9 @@
                                                                 clientes
                                                             ON
                                                                 creditos.id_cliente = clientes.id_clientes
-                                                                where creditos.status = 1 OR creditos.status =3 ;",$link) or die (mysql_error());
-																if(mysql_num_rows($iny_creditos) > 0){
-																	while($row = mysql_fetch_array($iny_creditos)){
+                                                                where creditos.status = 1 OR creditos.status =3 ;") or die (mysqli_error());
+																if(mysqli_num_rows($iny_creditos) > 0){
+																	while($row = mysqli_fetch_array($iny_creditos)){
 																		echo "<option value='$row[0]'>[#$row[9]] $row[1] $row[2] $row[3] (FP: ".date("d/m/Y",strtotime($row[4])).") ";
 																		
 																		if($row[5] == 3){
@@ -316,9 +316,9 @@
 													<option value="">Seleccione una opcion</option>
 													<option value="100">Efectivo</option>
                                                     <?php
-															$iny_creditos = mysql_query("SELECT * FROM cuentas_bancarias_pago where status = 1;",$link) or die (mysql_error());
-															if(mysql_num_rows($iny_creditos) > 0){
-															  while($row = mysql_fetch_array($iny_creditos)){
+															$iny_creditos = mysqli_query($mysqli,"SELECT * FROM cuentas_bancarias_pago where status = 1;") or die (mysqli_error());
+															if(mysqli_num_rows($iny_creditos) > 0){
+															  while($row = mysqli_fetch_array($iny_creditos)){
 																echo "<option value='$row[0]'>[Banco: $row[1]] Titular: $row[2] (Cuenta: $row[3]) ";
 																echo "</option>";
 															  }

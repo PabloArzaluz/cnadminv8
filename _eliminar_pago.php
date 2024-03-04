@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -15,8 +15,8 @@
 
 	//Insertar Info en Tabla para recuperacion
 	$conocer_pago = "SELECT * FROM pagos WHERE id_pagos = '$idpago';";
-	$iny_conocer_pago = mysql_query($conocer_pago,$link) or die(mysql_error());
-	$fpago = mysql_fetch_assoc($iny_conocer_pago);
+	$iny_conocer_pago = mysqli_query($mysqli,$conocer_pago) or die(mysqli_error());
+	$fpago = mysqli_fetch_assoc($iny_conocer_pago);
 	$stringHTML = 	"{id_pagos:".$fpago['id_pagos']."},
 					{id_usuario:".$fpago['id_usuario']."},
 					{fecha_captura:".$fpago['fecha_captura']."},
@@ -34,12 +34,12 @@
 					";
 
 	$INSERTAR_EVIDENCIA_ELIMINACION = "INSERT INTO pagos_eliminados(usuario_elimino,fechahoraelimino,string_data) VALUES('".$_SESSION['id_usuario']."','".$fecha." ".$hora."','".$stringHTML."');";
-	$INY_INSERTAR_EVIDENCIA_ELIMINACION= mysql_query($INSERTAR_EVIDENCIA_ELIMINACION,$link) or die(mysql_error());
+	$INY_INSERTAR_EVIDENCIA_ELIMINACION= mysqli_query($mysqli,$INSERTAR_EVIDENCIA_ELIMINACION) or die(mysqli_error());
 	//$id_credito=$_GET['idcredito'];
 
 
    	$query= "DELETE FROM pagos WHERE id_pagos = $idpago;";
-    $resultado= mysql_query($query,$link) or die(mysql_error());
+    $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 
 	header('Location: pagos.php?info=4');
 

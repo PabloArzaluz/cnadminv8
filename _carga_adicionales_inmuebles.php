@@ -1,10 +1,11 @@
 <?php
     session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	error_reporting(E_ALL); ini_set("display_errors", 1);
+    include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
     include("include/functions.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -33,12 +34,12 @@
         chmod($ruta,0777);
         $insertar_informacion_archivo = "INSERT INTO inmuebles(id_credito,id_cliente,folio_real,comentarios,nombre_archivo1,ruta_archivo1) 
         VALUES('$id_credito','$id_cliente ','$folio_real','$comentarios','$nombre_archivo_original','$ruta');";
-        $iny_consulta = mysql_query($insertar_informacion_archivo,$link) or die(mysql_error());
+        $iny_consulta = mysqli_query($mysqli,$insertar_informacion_archivo) or die(mysqli_error());
         header("Location:detalle-credito.php?id=".$id_credito);
     }else{
         $insertar_informacion_archivo = "INSERT INTO inmuebles(id_credito,id_cliente,folio_real,comentarios) 
         VALUES('$id_credito','$id_cliente ','$folio_real','$comentarios');";
-        $iny_consulta = mysql_query($insertar_informacion_archivo,$link) or die(mysql_error());
+        $iny_consulta = mysqli_query($insertar_informacion_archivo,$link) or die(mysqli_error());
         header("Location:detalle-credito.php?id=".$id_credito);
         
     }

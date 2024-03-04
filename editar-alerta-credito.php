@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -61,16 +61,16 @@
 								//Conocer Folio
 								$id_credito = $_GET['id'];
 								$conocer_credito = "SELECT * FROM creditos where id_creditos = '$id_credito';";
-								$iny_conocer_credito = mysql_query($conocer_credito,$link) or die(mysql_error());
-								$fcredito = mysql_fetch_row($iny_conocer_credito);
+								$iny_conocer_credito = mysqli_query($mysqli,$conocer_credito) or die(mysqli_error());
+								$fcredito = mysqli_fetch_row($iny_conocer_credito);
 							?>
 							<?php
 								$CONOCER_ALERTA_ACTUAL = 'SELECT * from alerta_credito where idCredito = '.$id_credito.' AND status = 1 ORDER BY idAlertaCredito desc limit 1';
-                                $INY_CONOCER_ALERTA_ACTUAL = mysql_query($CONOCER_ALERTA_ACTUAL,$link) or die(mysql_error());
+                                $INY_CONOCER_ALERTA_ACTUAL = mysqli_query($mysqli,$CONOCER_ALERTA_ACTUAL) or die(mysqli_error());
                                 $alertaActivada = 0;
-                                if(mysql_num_rows($INY_CONOCER_ALERTA_ACTUAL) > 0 ){
+                                if(mysqli_num_rows($INY_CONOCER_ALERTA_ACTUAL) > 0 ){
                                     $alertaActivada = 1;
-                                    $FILA_CONOCER_ALERTA_ACTUAL = mysql_fetch_array($INY_CONOCER_ALERTA_ACTUAL);
+                                    $FILA_CONOCER_ALERTA_ACTUAL = mysqli_fetch_array($INY_CONOCER_ALERTA_ACTUAL);
                                 }
 							?>
 					<div class="widget">
@@ -106,8 +106,8 @@
 													<?php
 														//Conocer Cliente
 														$conocer_cliente = "SELECT * FROM clientes where id_clientes = '$fcredito[1]';";
-														$iny_conocer_cliente = mysql_query($conocer_cliente,$link) or die(mysql_error());
-														$fcliente = mysql_fetch_row($iny_conocer_cliente);
+														$iny_conocer_cliente = mysqli_query($mysqli,$conocer_cliente) or die(mysqli_error());
+														$fcliente = mysqli_fetch_row($iny_conocer_cliente);
 
 													?>
 													<select name="cliente" class="select2" disabled>

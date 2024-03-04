@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -114,9 +114,9 @@
 
 									<?php
 										//Consulta Cientes
-										$iny_clientes = mysql_query("select * from cuentas_bancarias_pago where status='1';",$link) or die (mysql_error());
-										if(mysql_num_rows($iny_clientes) > 0){
-							              while($row = mysql_fetch_array($iny_clientes)){
+										$iny_clientes = mysqli_query($mysqli,"select * from cuentas_bancarias_pago where status='1';") or die (mysqli_error());
+										if(mysqli_num_rows($iny_clientes) > 0){
+							              while($row = mysqli_fetch_array($iny_clientes)){
 											echo "<tr>";
 							                echo "<td> $row[1]</td>";
 											

@@ -5,9 +5,9 @@ if(validarAccesoModulos('permiso_alertas_credito') == 1){
 	    FROM alerta_credito INNER JOIN creditos on alerta_credito.idCredito = creditos.id_creditos 
         inner join clientes ON creditos.id_cliente= clientes.id_clientes
         WHERE alerta_credito.STATUS=1 AND fechaAlerta < current_date  + INTERVAL 7 DAY ORDER BY FECHAaLERTA ASC;';
-    $INY_CONOCER_ALERTAS = mysql_query($CONOCER_ALERTAS,$link) or die(mysql_error());
+    $INY_CONOCER_ALERTAS = mysqli_query($mysqli,$CONOCER_ALERTAS) or die(mysqli_error());
     $alertas = 0;
-    if(mysql_num_rows($INY_CONOCER_ALERTAS) > 0 ){
+    if(mysqli_num_rows($INY_CONOCER_ALERTAS) > 0 ){
         $alertas = 1;
         
     }
@@ -31,7 +31,7 @@ if(validarAccesoModulos('permiso_alertas_credito') == 1){
             <ul class="list-unstyled todo-list">
                 <?php
                 if($alertas > 0 ){
-                    while ($FILA_CONOCER_ALERTAS = mysql_fetch_array($INY_CONOCER_ALERTAS)){
+                    while ($FILA_CONOCER_ALERTAS = mysqli_fetch_array($INY_CONOCER_ALERTAS)){
                         echo '
                     <li>
                         <p>

@@ -1,6 +1,6 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("../include/configuration.php");
 	date_default_timezone_set('America/Mexico_City');
 	setlocale(LC_ALL, 'es_MX.UTF-8');
 
@@ -10,7 +10,7 @@
 	include("../conf/conecta.inc.php");
 	include("../conf/config.inc.php");
 	include("../include/funciones.php");
-	$link = Conecta();
+	
 	$date_actual = date("Y-m-d");
 if($_REQUEST)
 {
@@ -36,17 +36,17 @@ if($_REQUEST)
                     creditos.id_cliente = clientes.id_clientes
                     where creditos.id_creditos = '".strtolower($username)."' and (creditos.status = 1 OR creditos.status =3);
                 ";
-	$results = mysql_query($query,$link) or die(mysql_error());
+	$results = mysqli_query($mysqli,$query) or die(mysqli_error());
 	if($username == ""){
 		echo '<span class="label label-warning"><input type="hidden" id="folio_validador" value="" required><i class="fa fa-exclamation-triangle fa-fw"></i> Introduce un numero de Credito</span><script type="text/javascript">document.getElementById("folio").value="";</script>';
 	return 0;
 	}
-	if(mysql_num_rows($results) > 0) // not available
+	if(mysqli_num_rows($results) > 0) // not available
 	{
-		$fila_info = mysql_fetch_row($results);
+		$fila_info = mysqli_fetch_row($results);
 		$conocer_saldo_restante = "SELECT sum(monto) from pagos where id_credito= ".$fila_info[0]." and tipo_pago= 2;";
-		$iny_conocerSaldoRestante = mysql_query($conocer_saldo_restante,$link) or die(mysql_error());
-		$fSaldoRestante = mysql_fetch_row($iny_conocerSaldoRestante); 
+		$iny_conocerSaldoRestante = mysqli_query($mysqli,$conocer_saldo_restante) or die(mysqli_error());
+		$fSaldoRestante = mysqli_fetch_row($iny_conocerSaldoRestante); 
 		
 		if($fSaldoRestante[0] == ""){
 			$totalPagos = 0;
@@ -115,11 +115,11 @@ if($_REQUEST)
             $ano = $date_inicial->format('Y');
             $date_completa = $date_inicial->format('d/m/Y');
             $conocer_pago_mes = "select * from pagos where year(fecha_pago)='".$ano."' and month(fecha_pago)='".$mes."' and id_credito='".$fila_info[0]."';";
-            $iny_conocer_pago_mes = mysql_query($conocer_pago_mes,$link) or die(mysql_error());
+            $iny_conocer_pago_mes = mysqli_query($mysqli,$conocer_pago_mes) or die(mysqli_error());
 
-            if(mysql_num_rows($iny_conocer_pago_mes)>0){
+            if(mysqli_num_rows($iny_conocer_pago_mes)>0){
                 
-               while($fila = mysql_fetch_array($iny_conocer_pago_mes)){
+               while($fila = mysqli_fetch_array($iny_conocer_pago_mes)){
                    if($fila[6] != 1){
                          	
                          $date_inicial->format('d/m/Y');
@@ -145,13 +145,13 @@ if($_REQUEST)
 		
 		//Consultar Adeudos
 		$conocer_adeudos_cargos = "select COALESCE(sum(monto),0) as total_cargos from adeudos WHERE tipo='cargo' and id_credito='".$fila_info[0]."';";
-		$iny_conocer_adeudos_cargos = mysql_query($conocer_adeudos_cargos,$link) or die(mysql_error());
-		$fConocerAdeudosCargos = mysql_fetch_row($iny_conocer_adeudos_cargos);
+		$iny_conocer_adeudos_cargos = mysqli_query($mysqli,$conocer_adeudos_cargos) or die(mysqli_error());
+		$fConocerAdeudosCargos = mysqli_fetch_row($iny_conocer_adeudos_cargos);
 		$fConocerAdeudosCargos[0];
 
 		$conocer_adeudos_abonos = "select COALESCE(sum(monto),0) as total_abonos from pagos WHERE tipo_pago='3' and id_credito='".$fila_info[0]."';";
-		$iny_conocer_adeudos_abonos = mysql_query($conocer_adeudos_abonos,$link) or die(mysql_error());
-		$fConocerAdeudosAbonos = mysql_fetch_row($iny_conocer_adeudos_abonos);
+		$iny_conocer_adeudos_abonos = mysqli_query($mysqli,$conocer_adeudos_abonos) or die(mysqli_error());
+		$fConocerAdeudosAbonos = mysqli_fetch_row($iny_conocer_adeudos_abonos);
 		$fConocerAdeudosAbonos[0];
 		$totalSaldoAdeudos = $fConocerAdeudosCargos[0] - $fConocerAdeudosAbonos[0]; 
 
@@ -172,23 +172,23 @@ if($_REQUEST)
 			      </div>
 			      <div class='modal-body2'>";
 		$conocer_adeudos_cargos_mostrar = "select * from adeudos where id_credito='$username';";
-		$iny_conocer_adeudos_cargos_mostrar = mysql_query($conocer_adeudos_cargos_mostrar,$link) or die (mysql_error());
+		$iny_conocer_adeudos_cargos_mostrar = mysqli_query($mysqli,$conocer_adeudos_cargos_mostrar) or die (mysqli_error());
 		echo "<table class='table'>";
 		echo "<thead><th>Fecha</th><th>Comentarios</th><th>Monto</th></thead>";
 		$sumaCargos = 0;
-		if(mysql_num_rows($iny_conocer_adeudos_cargos_mostrar) > 0){
+		if(mysqli_num_rows($iny_conocer_adeudos_cargos_mostrar) > 0){
 			
-			while($fMostarAdeudosCargos = mysql_fetch_array($iny_conocer_adeudos_cargos_mostrar)){
+			while($fMostarAdeudosCargos = mysqli_fetch_array($iny_conocer_adeudos_cargos_mostrar)){
 				echo "<tr class='warning'><td>$fMostarAdeudosCargos[6]</td><td>$fMostarAdeudosCargos[7]</td><td>$".number_format(($fMostarAdeudosCargos[2]),2)."</td></tr>";
 				$sumaCargos += $fMostarAdeudosCargos[2];
 			}
 		}
 		$conocer_adeudos_abonos_mostrar = "select * from pagos where id_credito='$username' and tipo_pago='3';";
-		$iny_conocer_adeudos_abonos_mostrar = mysql_query($conocer_adeudos_abonos_mostrar,$link) or die (mysql_error());
+		$iny_conocer_adeudos_abonos_mostrar = mysqli_query($mysqli,$conocer_adeudos_abonos_mostrar) or die (mysqli_error());
 		$sumaAbonos = 0;
-		if(mysql_num_rows($iny_conocer_adeudos_abonos_mostrar) > 0){
+		if(mysqli_num_rows($iny_conocer_adeudos_abonos_mostrar) > 0){
 			
-			while($fMostarAdeudosAbonos = mysql_fetch_array($iny_conocer_adeudos_abonos_mostrar)){
+			while($fMostarAdeudosAbonos = mysqli_fetch_array($iny_conocer_adeudos_abonos_mostrar)){
 				echo "<tr class='success'><td>$fMostarAdeudosAbonos[4]</td><td>$fMostarAdeudosAbonos[7]</td><td>- $".number_format(($fMostarAdeudosAbonos[5]),2)."</td></tr>";
 				$sumaAbonos += $fMostarAdeudosAbonos[5];
 			}
@@ -229,11 +229,11 @@ if($_REQUEST)
 				            $ano = $datemodal_inicial->format('Y');
 				            $datemodal_completa = $datemodal_inicial->format('d/m/Y');
 				            $conocer_pago_mes = "select * from pagos where year(fecha_pago)='".$ano."' and month(fecha_pago)='".$mes."' and id_credito='".$fila_info[0]."';";
-				            $iny_conocer_pago_mes = mysql_query($conocer_pago_mes,$link) or die(mysql_error());
+				            $iny_conocer_pago_mes = mysqli_query($mysqli,$conocer_pago_mes) or die(mysqli_error());
 
-				            if(mysql_num_rows($iny_conocer_pago_mes)>0){
+				            if(mysqli_num_rows($iny_conocer_pago_mes)>0){
 				                
-				               while($fila = mysql_fetch_array($iny_conocer_pago_mes)){
+				               while($fila = mysqli_fetch_array($iny_conocer_pago_mes)){
 				                   if($fila[6] != 1){
 				                        $montoAPagar = (conocer_monto_deudor($fila_info[0])/100)* $interesMoratorio;
 				                         
@@ -270,5 +270,5 @@ if($_REQUEST)
 	}
 	
 }
-mysql_close($link);
+mysqli_close($mysqli);
 ?>

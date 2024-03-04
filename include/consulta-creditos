@@ -3,7 +3,7 @@
 echo '<select name="municipios" class="form-control">';
 require ("conexion.php");
 $consulta= "SELECT * FROM municipios"; 
-$resultado= mysql_query($consulta,$conexion) or die (mysql_error());
+$resultado= mysqli_query($mysqli,$consulta) or die (mysqi_error());
 ?>
 <option value="">Seleccione</option>
 <?

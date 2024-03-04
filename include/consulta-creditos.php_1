@@ -1,10 +1,10 @@
 <?php
  
 echo '<select class="form-control" name="credito" id="credito">';
-ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+include("../include/configuration.php");
 include("../conf/conecta.inc.php");
 include("../conf/config.inc.php");
-$link = Conecta();
+
 $consulta= "SELECT creditos.id_creditos,creditos.id_inversionista,clientes.nombres,clientes.apaterno,clientes.amaterno,creditos.fecha_prestamo,creditos.monto FROM creditos INNER JOIN clientes on clientes.id_clientes = creditos.id_cliente;"; 
 $resultado= mysql_query($consulta,$link) or die (mysql_error());
 ?>

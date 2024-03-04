@@ -1,11 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -103,8 +103,8 @@ function limpiarform(){
 								//Conocer Folio
 								$id_credito = $_GET['id'];
 								$conocer_credito = "SELECT * FROM creditos where id_creditos = '$id_credito';";
-								$iny_conocer_credito = mysql_query($conocer_credito,$link) or die(mysql_error());
-								$fcredito = mysql_fetch_row($iny_conocer_credito);
+								$iny_conocer_credito = mysqli_query($mysqli,$conocer_credito) or die(mysqli_error());
+								$fcredito = mysqli_fetch_row($iny_conocer_credito);
 							?>
 					<div class="widget">
 						<div class="widget-header">
@@ -141,8 +141,8 @@ function limpiarform(){
 													<?php
 														//Conocer Cliente
 														$conocer_cliente = "SELECT * FROM clientes where id_clientes = '$fcredito[1]';";
-														$iny_conocer_cliente = mysql_query($conocer_cliente,$link) or die(mysql_error());
-														$fcliente = mysql_fetch_row($iny_conocer_cliente);
+														$iny_conocer_cliente = mysqli_query($mysqli,$conocer_cliente) or die(mysqli_error());
+														$fcliente = mysqli_fetch_row($iny_conocer_cliente);
 
 													?>
 													<select name="cliente" class="select2" disabled>

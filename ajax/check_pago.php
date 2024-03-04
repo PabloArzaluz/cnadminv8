@@ -1,12 +1,12 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("../include/configuration.php");
 	date_default_timezone_set('America/Mexico_City');
 	setlocale(LC_ALL, 'es_MX.UTF-8');
 	
 	include("../conf/conecta.inc.php");
 	include("../conf/config.inc.php");
-	$link = Conecta();
+	
 if($_REQUEST)
 {
 	$monto 	= $_REQUEST['monto']; //monto
@@ -46,11 +46,11 @@ if($_REQUEST)
 		                    creditos.id_cliente = clientes.id_clientes
 		                    where creditos.id_creditos = '".strtolower($credito)."' and (creditos.status = 1 OR creditos.status =3);
 		                ";
-						$results = mysql_query($query,$link) or die(mysql_error());
-						$fCredito = mysql_fetch_row($results);
+						$results = mysqli_query($mysqli,$query) or die(mysqli_error());
+						$fCredito = mysqli_fetch_row($results);
 						$TotalPagosCapital = "SELECT sum(monto) from pagos where id_credito= ".$credito." and tipo_pago= 2;";
-						$iny_TotalPagosCapital = mysql_query($TotalPagosCapital, $link) or die(mysql_error());
-						$fTotalPagosCapital = mysql_fetch_row($iny_TotalPagosCapital); 
+						$iny_TotalPagosCapital = mysqli_query($mysqli,$TotalPagosCapitalk) or die(mysqli_error());
+						$fTotalPagosCapital = mysqli_fetch_row($iny_TotalPagosCapital); 
 						
 						if($fTotalPagosCapital[0] == ""){
 							$totalPagos = 0;

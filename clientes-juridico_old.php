@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -70,9 +70,9 @@
 								<tbody>
 									<?php
 										//Consulta Cientes
-										$iny_clientes = mysql_query("select * from clientes where status='activo';",$link) or die (mysql_error());
-										if(mysql_num_rows($iny_clientes) > 0){
-							              while($row = mysql_fetch_array($iny_clientes)){
+										$iny_clientes = mysqli_query($mysqli,"select * from clientes where status='activo';") or die (mysqli_error());
+										if(mysqli_num_rows($iny_clientes) > 0){
+							              while($row = mysqli_fetch_array($iny_clientes)){
 							                echo "<tr>
 							                <td>".$row[0]."</td>
 							                <td> <a href='#'>".$row[1]." ".$row[2]." ".$row[3]."</a></td>

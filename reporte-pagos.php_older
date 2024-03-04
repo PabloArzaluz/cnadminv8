@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	setlocale(LC_ALL, 'es_MX.UTF-8');
 	if(!isset($_SESSION['id_usuario'])){
@@ -220,7 +220,7 @@
 											<select disabled name="credito" id="credito" class="select2" required onchange="alertaCreditoJuridico(this.value)">
 												<option value="">Todos</option>
 													<?php
-															$iny_creditos = mysql_query("SELECT 
+															$iny_creditos = mysqli_query($mysqli,"SELECT 
                                                                 creditos.id_creditos,
                                                                 clientes.nombres,
                                                                 clientes.apaterno,
@@ -237,9 +237,9 @@
                                                                 clientes
                                                             ON
                                                                 creditos.id_cliente = clientes.id_clientes
-                                                                where creditos.status = 1 OR creditos.status =3 ;",$link) or die (mysql_error());
-															if(mysql_num_rows($iny_creditos) > 0){
-															  while($row = mysql_fetch_array($iny_creditos)){
+                                                                where creditos.status = 1 OR creditos.status =3 ;") or die (mysqli_error());
+															if(mysqli_num_rows($iny_creditos) > 0){
+															  while($row = mysqli_fetch_array($iny_creditos)){
 																echo "<option value='$row[0]'>[#$row[9]] $row[1] $row[2] $row[3] (FP: ".date("d/m/Y",strtotime($row[4])).") ";
 																  
 																if($row[5] == 3){

@@ -1,12 +1,12 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	date_default_timezone_set('America/Mexico_City');
 	setlocale(LC_ALL, 'es_MX.UTF-8');
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -123,12 +123,12 @@
 											<?php 
 												//Conocer años
 												$conocer_years = "select year(fecha_captura) AS ANIO from pagos group by year(fecha_captura) ORDER BY ANIO DESC ;";
-												$iny_conocer_years = mysql_query($conocer_years,$link) or die(mysql_error());
+												$iny_conocer_years = mysqli_query($mysqli,$conocer_years) or die(mysqli_error());
 											?>
 												<select class="form-control" required name="tipo-pago" id="tipo-pago" onchange="cambiarYears(this)">
 												<?php 
-													if(mysql_num_rows($iny_conocer_years) > 0){
-							              				while($fila_years = mysql_fetch_array($iny_conocer_years)){
+													if(mysqli_num_rows($iny_conocer_years) > 0){
+							              				while($fila_years = mysqli_fetch_array($iny_conocer_years)){
 															echo '<option ';
 															if($anio == $fila_years[0]) echo "selected ";
 															echo 'value="'.$fila_years[0].'">'.$fila_years[0].'</option>';
@@ -167,9 +167,9 @@
 								<tbody>
 									<?php
 										//Consulta Pagos
-										$iny_pagos = mysql_query($conocer_pagos_filtrados_por_anio,$link) or die (mysql_error());
-										if(mysql_num_rows($iny_pagos) > 0){
-							              while($row = mysql_fetch_array($iny_pagos)){
+										$iny_pagos = mysqli_query($mysqli,$conocer_pagos_filtrados_por_anio) or die (mysqli_error());
+										if(mysqli_num_rows($iny_pagos) > 0){
+							              while($row = mysqli_fetch_array($iny_pagos)){
 							                echo "<tr>
 											<td>$row[0]</td>
 							                <td><span class='badge'>$row[10]</span></td>
@@ -188,7 +188,8 @@
 											echo "</span></td>";
 							                echo "<td>".date("d/m/Y",strtotime($row[6]))."</td>";
 							                echo "<td>";
-							                echo "<span title='".strftime('%A,  %d de %B del %Y %I:%M:%S %p',strtotime($row[7]))."' class='top' data-toggle='tooltip'>".date("d/m/Y",strtotime($row[7]))." <i class='fa fa-info-circle' aria-hidden='true'></i></span>";
+							                echo "<span title='".date('l,  d  F  Y, H:i:s',strtotime($row[7]))."' class='top' data-toggle='tooltip'>".date("d/m/Y",strtotime($row[7]))." <i class='fa fa-info-circle' aria-hidden='true'></i></span>";
+											//echo "<span title='".strftime('%A,  %d de %B del %Y %I:%M:%S %p',strtotime($row[7]))."' class='top' data-toggle='tooltip'>".date("d/m/Y",strtotime($row[7]))." <i class='fa fa-info-circle' aria-hidden='true'></i></span>";
 							                echo "</td>";
 							                
                                             echo "<td>";

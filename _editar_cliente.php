@@ -1,10 +1,11 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	error_reporting(E_ALL); ini_set("display_errors", 1);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -49,7 +50,7 @@
 					telefonotrabajo = '$telefonotrabajo',
 					categoria = '$categoria'
 				WHERE id_clientes = $idcliente;";
-    			$resultado= mysql_query($query,$link) or die(mysql_error());
+    			$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 
 			//Identificacion Oficial
 		if (is_uploaded_file($_FILES['identificacion-oficial']['tmp_name'])){
@@ -62,7 +63,7 @@
 			move_uploaded_file($_FILES['identificacion-oficial']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$actualizar_identificacion_oficial = "update clientes set file_identificacion='$ruta', nombre_identificacion ='$nombre_archivo_original' where id_clientes=$idcliente;";
-			$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 		}
 
 		if (is_uploaded_file($_FILES['comprobante-domicilio']['tmp_name'])){
@@ -75,7 +76,7 @@
 			move_uploaded_file($_FILES['comprobante-domicilio']['tmp_name'], $ruta);
 			chmod($ruta,0777);
 			$upd = "update clientes set file_comprobantedomicilio='$ruta',nombre_comprobantedomicilio = '$nombre_archivo_original' where id_clientes=$idcliente;";
-			$iny_consulta = mysql_query($upd,$link) or die(mysql_error());
+			$iny_consulta = mysqli_query($mysqli,$upd) or die(mysqli_error());
 		}
 
 

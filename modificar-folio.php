@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -111,8 +111,8 @@ function limpiarform(){
 								//Conocer Folio
 								$folio = $_GET['id'];
 								$conocer_folio = "SELECT * FROM creditos where id_creditos = '$folio';";
-								$iny_conocer_folio = mysql_query($conocer_folio,$link) or die(mysql_error());
-								$fcredito = mysql_fetch_row($iny_conocer_folio);
+								$iny_conocer_folio = mysqli_query($mysqli,$conocer_folio) or die(mysqli_error());
+								$fcredito = mysqli_fetch_row($iny_conocer_folio);
 							?>
 							<div class="row">
 								<div class="col-lg-12">

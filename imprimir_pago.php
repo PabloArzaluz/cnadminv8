@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
@@ -35,9 +35,9 @@
 				'$monto_pago',
 				'$tipo_pago',
 				'$comentarios');";
-    			$resultado= mysql_query($query,$link) or die(mysql_error());
+    			$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
         
-//$id_cliente = mysql_insert_id();
+//$id_cliente = mysqli_insert_id();
 
  header('Location: pagos.php?info=1');
 */
@@ -96,11 +96,11 @@ $pdf->SetFont('Arial','',8);
                     ON
                       creditos.id_cliente = clientes.id_clientes 
                       WHERE pagos.id_pagos=$id_pago;";
-            $resultado= mysql_query($consulta_productos,$link) or die(mysql_error());
+            $resultado= mysqli_query($mysqli,$consulta_productos) or die(mysqli_error());
 
             $item=0;
             
-              while($row = mysql_fetch_array($resultado)){
+              while($row = mysqli_fetch_array($resultado)){
                 $item= $item+1;
                 $pdf->Cell(15,8,$item,0);
                 $pdf->Cell(30,8, $row[0],0);

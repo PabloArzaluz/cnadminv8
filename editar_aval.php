@@ -1,10 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
-	$link = Conecta();
+	
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
 	}
@@ -106,8 +106,8 @@
 							<?php
 								$idAval = $_GET['idAv'];
 								$conocer_datos_avales = "SELECT * FROM avales  where id_avales = ".$idAval.";";
-								$iny_conocer_avales = mysql_query($conocer_datos_avales, $link) or die(mysql_error());
-								$fila_avales = mysql_fetch_row($iny_conocer_avales);
+								$iny_conocer_avales = mysqli_query($mysqli,$conocer_datos_avales) or die(mysqli_error());
+								$fila_avales = mysqli_fetch_row($iny_conocer_avales);
 							?>
 								<form class="form-horizontal" name="formulario" role="form" method="post" action="_editar_aval_individual.php" enctype="multipart/form-data" autocomplete="off">
 

@@ -1,9 +1,10 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	error_reporting(E_ALL); ini_set("display_errors", 1);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 
 	if(!isset($_SESSION['id_usuario'])){
@@ -24,10 +25,10 @@
 					$folio = $_POST['folio'];
 					$id_credito = $_POST['credito'];
 					$conocer_folio = "SELECT * FROM creditos WHERE folio = '$folio';";
-					$iny_conocer_folio = mysql_query($conocer_folio,$link) or die(mysql_error());
-					if(mysql_num_rows($iny_conocer_folio)<=0){
+					$iny_conocer_folio = mysqli_query($mysqli,$conocer_folio) or die(mysqli_error());
+					if(mysqli_num_rows($iny_conocer_folio)<=0){
 						$query = "UPDATE creditos SET folio='$folio' where id_creditos='$id_credito';";
-					    $resultado= mysql_query($query,$link) or die(mysql_error());
+					    $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 					    $ruta = "detalle-credito.php?info=1&id=".$id_credito;
 						header('Location:'.$ruta);
 					}else{

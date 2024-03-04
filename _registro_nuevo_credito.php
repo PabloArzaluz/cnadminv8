@@ -1,9 +1,9 @@
 <?php
 	session_start(); // crea una sesion
-	ini_set("error_reporting", E_ALL & ~E_DEPRECATED);
+	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	$link = Conecta();
+	
 	date_default_timezone_set('America/Mexico_City');
 
 	if(!isset($_SESSION['id_usuario'])){
@@ -21,8 +21,8 @@
 					//INICIO Determinar si ya existe el folio indicado
 					$folio = $_POST['folio'];
 					$conocer_folio = "SELECT * FROM creditos WHERE folio = '$folio';";
-					$iny_conocer_folio = mysql_query($conocer_folio,$link) or die(mysql_error());
-					if(mysql_num_rows($iny_conocer_folio)<=0){
+					$iny_conocer_folio = mysqli_query($mysqli,$conocer_folio) or die(mysqli_error());
+					if(mysqli_num_rows($iny_conocer_folio)<=0){
 						$fecha = date("Y-m-d");
 					  	$hora = date("G:i:s");
 						$usuario_captura = 	$_SESSION['id_usuario'];
@@ -109,8 +109,8 @@
 									'$monto_credito_nuevo_amp'
 					                )";
 
-					    $resultado= mysql_query($query,$link) or die(mysql_error());
-					    $id_cliente_insertado = mysql_insert_id();
+					    $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
+					    $id_cliente_insertado = mysqli_insert_id();
 						//Se inicializa la variable Credito para el proceso de registro
 			            if(isset($_SESSION['id_credito'])){
 		                    unset($_SESSION['id_credito']);
@@ -139,7 +139,7 @@
 							move_uploaded_file($_FILES['poder']['tmp_name'], $ruta);
 							chmod($ruta,0777);
 							$actualizar_identificacion_oficial = "update creditos set poder_file='$ruta', poder_nombre ='$nombre_archivo_original' where id_creditos=$id_cliente_insertado;";
-							$iny_consulta = mysql_query($actualizar_identificacion_oficial,$link) or die(mysql_error());
+							$iny_consulta = mysqli_query($mysqli,$actualizar_identificacion_oficial) or die(mysqli_error());
 						}
 
 						if (is_uploaded_file($_FILES['mutuo']['tmp_name'])){
@@ -152,7 +152,7 @@
 							move_uploaded_file($_FILES['mutuo']['tmp_name'], $ruta2);
 							chmod($ruta2,0777);
 							$actualizar_mutuo = "update creditos set mutuo_file='$ruta2', mutuo_nombre ='$nombre_archivo_original2' where id_creditos=$id_cliente_insertado;";
-							$iny_consulta2 = mysql_query($actualizar_mutuo,$link) or die(mysql_error());
+							$iny_consulta2 = mysqli_query($mysqli,$actualizar_mutuo) or die(mysqli_error());
 						}
 
 						$ruta = "nuevo-prestamo-avales.php?info=1&id=".$id_cliente_insertado."&cl=".$id_cliente;
