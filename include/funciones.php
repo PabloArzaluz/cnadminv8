@@ -8,7 +8,7 @@
 
   	//Muestra la cantidad que resta a pagar para un credito
   	function conocer_monto_deudor($credito) {
-  		
+  		include("conf/config.inc.php");
 	  $query = "
 			SELECT
                 creditos.id_creditos,

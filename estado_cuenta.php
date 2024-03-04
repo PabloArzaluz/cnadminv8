@@ -73,8 +73,13 @@
     			<div class="card card-default">
 				  <div class="card-body">
 				  	<div class="row">
-
-				  		<div class="col-lg-6 offset-lg-6"><strong>Fecha de Impresion: </strong><?php echo strftime('%A,  %d de %B del %Y , ',strtotime($date_actual)); echo $hora; ?></div>
+				  		<div class="col-lg-6 offset-lg-6"><strong>Fecha de Impresion: </strong>
+						<?php 
+							//echo strftime('%A,  %d de %B del %Y , ',strtotime($date_actual));  --deprecated
+							echo date('l  d F Y , ',strtotime($date_actual)); 
+							echo $hora; 
+						?>
+					</div>
 				  	</div>
 				  	<div class="row">
 				  		<div class="col-lg-9">
@@ -110,7 +115,11 @@
 
 								 ?>
 
-								</span><br> <?php echo strftime('%d-%B-%Y',strtotime($f_credito[4])); ?>
+								</span><br> 
+									<?php 
+										echo date('d-F-Y',strtotime($f_credito[4])); 
+										// echo strftime('%d-%B-%Y',strtotime($f_credito[4])); --deprecated
+									?>
 					    </div>
 
 				    <div class="col-sm-2">
@@ -305,7 +314,9 @@
 						}
 
 
-						echo "<tr class='table-active'><td colspan='7'><center><h5>".strftime('%B-%Y',strtotime($FechaCredito))." <small>Fecha Pago: $fecha_pago_normal / Fecha Limite: $fecha_maxima_pago $cadena_tipo_pago</small></h5></center></td></tr>";
+						
+						echo "<tr class='table-active'><td colspan='7'><center><h5>".date('F-Y',strtotime($FechaCredito))." <small>Fecha Pago: $fecha_pago_normal / Fecha Limite: $fecha_maxima_pago $cadena_tipo_pago</small></h5></center></td></tr>";
+						//echo "<tr class='table-active'><td colspan='7'><center><h5>".strftime('%B-%Y',strtotime($FechaCredito))." <small>Fecha Pago: $fecha_pago_normal / Fecha Limite: $fecha_maxima_pago $cadena_tipo_pago</small></h5></center></td></tr>"; --deprecated
 						//Conocer si hay pagos, si los hay, mostrarlos y el respectivo adeudo, si no los hay mostrar pago segun fecha
 						$conocer_pagos_recibidos_mes = "SELECT * FROM pagos WHERE id_credito = '$f_credito[0]' AND MONTH(fecha_pago)='".date('m',strtotime($FechaCredito))."' AND YEAR(fecha_pago) = '".date('Y',strtotime($FechaCredito))."' and tipo_pago=1;";
 						$iny_conocer_pagos_recibidos = mysqli_query($mysqli,$conocer_pagos_recibidos_mes) or die(mysqli_error());
