@@ -50,7 +50,7 @@
 
 
 	function conocer_interes_hoy($credito){
-		
+		include("conf/config.inc.php");
 		$query = "
 		SELECT
             creditos.id_creditos,
