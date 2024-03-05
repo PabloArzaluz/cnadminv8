@@ -70,14 +70,23 @@
 					<!-- HORIZONTAL FORM -->
 					<?php 
 						$id_creditos = $_GET['id'];
-						
-						$conocer_inversionista = "select * from inversionistas where id_inversionistas=(select id_inversionista from creditos where id_creditos = $id_creditos);"; 
-                        $iny_consultar_inversionista = mysqli_query($mysqli,$conocer_inversionista) or die (mysqli_error());
-                        $fila_inversionista = mysqli_fetch_row($iny_consultar_inversionista);
+						$id_inverCreditos = $_GET['incr'];
+						$conocer_inversionistaCreditos = "select id_inversionistas_creditos,
+														inversionistas_creditos.id_inversionista,
+														inversionistas.nombre as nombreinver,
+														id_credito,
+														monto,
+														interes,
+														inversionistas_creditos.comentarios
+												from inversionistas_creditos inner join inversionistas
+												on inversionistas_creditos.id_inversionista = inversionistas.id_inversionistas
+												where inversionistas_creditos.id_inversionistas_creditos = ".$id_inverCreditos.";"; 
+                        $iny_consultar_inversionistaCredito = mysqli_query($mysqli,$conocer_inversionistaCreditos) or die (mysqli_error());
+                        $fila_inversionistaCredito = mysqli_fetch_assoc($iny_consultar_inversionistaCredito);
 
                         $conocer_creditos = "select * from creditos where id_creditos=$id_creditos;"; 
                         $iny_consultar_creditos = mysqli_query($mysqli,$conocer_creditos) or die (mysqli_error());
-                        $fila_creditos = mysqli_fetch_row($iny_consultar_creditos);
+                        $fila_creditos = mysqli_fetch_assoc($iny_consultar_creditos);
 					?>
 
 					<div class="widget">
@@ -97,6 +106,7 @@
 								<form class="form-horizontal" role="form" method="post" action="_editar_inversionista_credito.php" enctype="multipart/form-data">
 
 								<div class="col-md-6">
+										
 										<div class="form-group">
 											<label for="select2" class="col-sm-3 control-label">Inversionista</label>
 											<div class="col-sm-9">
@@ -108,7 +118,7 @@
 															if(mysqli_num_rows($iny_clientes) > 0){
 															  while($row = mysqli_fetch_array($iny_clientes)){
 																echo "<option value='$row[0]'";
-																if($fila_inversionista[0] == $row[0]){
+																if($fila_inversionistaCredito['id_inversionista'] == $row[0]){
 																	echo " selected ";
 																}
 																echo ">$row[1]</option>";
@@ -119,13 +129,24 @@
 													<!-- END SELECT2 -->
 											</div>
 										</div>
+										<input type="hidden" name="inver_credito" value="<?php echo $fila_inversionistaCredito['id_inversionistas_creditos']; ?>">
 										<input type="hidden" name="credito" value="<?php echo $id_creditos; ?>">
 										<div class="form-group">
 											<label for="interes-api" class="col-sm-3 control-label">Interes a Pagar Inversionista</label>
 											<div class="col-sm-9">
 												<div class="input-group">
-												<input type="number" step=".1" required class="form-control" value="<?php echo $fila_creditos[29]; ?>" id="interes-api" name="interes-api" placeholder="Interes a pagar Inversionista" >
+												<input type="number" step=".01" required class="form-control" value="<?php echo $fila_inversionistaCredito['interes']; ?>" id="interes-api" name="interes-api" placeholder="Interes a pagar Inversionista" >
 												<span class="input-group-addon">% (1.8% por default)</span>
+												</div>
+												
+											</div>
+										</div>
+										<div class="form-group">
+											<label for="monto_asignado" class="col-sm-3 control-label">Monto Asignado</label>
+											<div class="col-sm-9">
+												<div class="input-group">
+												<input type="number" step=".01" max="<?php echo $fila_creditos['monto']; ?>" required class="form-control" value="<?php echo $fila_inversionistaCredito['monto']; ?>" id="monto_asignado" name="monto_asignado" placeholder="Monto Asignado" >
+												
 												</div>
 												
 											</div>
@@ -133,7 +154,7 @@
 										<div class="form-group">
 											<label for="comentarios" class="col-sm-3 control-label">Comentarios</label>
 											<div class="col-sm-9">
-												<textarea class="form-control" name="comentarios" placeholder="Comentarios"><?php echo $fila_creditos[11]; ?></textarea>
+												<textarea class="form-control" rows="5" name="comentarios" placeholder="Comentarios"><?php echo $fila_inversionistaCredito['comentarios']; ?></textarea>
 											</div>
 										</div>
                                     

@@ -67,6 +67,18 @@
         .tdfontmini{
             font-size:8pt;
         }
+        .tdfontmini-warning{
+            font-size:8pt;
+            color:#056600;
+        }
+        .tdfontmini-danger{
+            font-size:8pt;
+            color:#E42D00;
+        }
+        .tdfontmini-green{
+            font-size:8pt;
+            color:#009E24;
+        }
 </style>
 
 </head>
@@ -1371,7 +1383,7 @@
                                         <div class="col-xs-6">
                                             <!-- Nueva Tabla Inversionisias -->
                                             <table class="table table-bordered table-condensed">
-                                                <thead><th colspan="7"><center>Inversionistas Asignados<center></th></thead>
+                                                <thead><th colspan="8"><center>Inversionistas Asignados<center></th></thead>
                                                 <tbody>
                                                     <tr><td class='tdfontmini'><center><b>Inversionista</b></center></td>
                                                     <td class='tdfontmini'><center><b>Monto</b></center></td>
@@ -1379,14 +1391,16 @@
                                                     <td class='tdfontmini'><center><b>Comentarios</b></center></td>
                                                     <td class='tdfontmini'><center><b>Fecha Registro</b></center></td>
                                                     <td class='tdfontmini'><center><b>Total Pagos Inversionista</b></center></td>
-                                                    <td class='tdfontmini'><center><b>Saldo Inversionista</b></center></td></tr>
+                                                    <td class='tdfontmini'><center><b>Saldo Inversionista</b></center></td>
+                                                    <td class='tdfontmini'><center><b>Oper</b></center></td></tr>
                                                     <?php
-                                                        $conocerInversionistas = "select inversionistas_creditos.id_inversionista,nombre as nombreinversionista,monto,interes,inversionistas_creditos.comentarios,inversionistas_creditos.fecha_registro from inversionistas_creditos
+                                                        $conocerInversionistas = "select id_inversionistas_creditos,inversionistas_creditos.id_inversionista,nombre as nombreinversionista,monto,interes,inversionistas_creditos.comentarios,inversionistas_creditos.fecha_registro from inversionistas_creditos
                                                         INNER JOIN inversionistas on inversionistas.id_inversionistas = inversionistas_creditos.id_inversionista where inversionistas_creditos.id_credito=".$fila_credito[0].";";
                                                         $iny_ConocerInversionistas = mysqli_query($mysqli,$conocerInversionistas) or die ('Unable to execute query. '. mysqli_error($mysqli));
                                                         $cantidadcouenta = mysqli_num_rows($iny_ConocerInversionistas);
                                                         
                                                         if($cantidadcouenta>0){
+                                                            $acumulado = 0;
                                                             while($f_Inversionistas = mysqli_fetch_assoc($iny_ConocerInversionistas)){
                                                                 
                                                                 //$conocer_NombreInv = mysqli_query($mysqli,"SELECT nombre from inversionistas where id_inversionistas=$f_InverAnt[1]") or die(mysqli_error());
@@ -1411,8 +1425,9 @@
                                                                 if($_SESSION['level_user'] == 4 || $_SESSION['level_user'] == 5 || validarAccesoModulos('permiso_ver_inversionista_credito') == 1){ 
                                                                     if($_SESSION['level_user'] == 3 || $_SESSION['level_user'] == 4 || $_SESSION['level_user'] == 5){ 
                                                                         echo "<tr>
-                                                                        <td class='tdfontmini'>".$f_Inversionistas['nombreinversionista']."</td>
-                                                                        <td class='tdfontmini'>$ ".number_format($f_Inversionistas['monto'],2)."</td>
+                                                                        <td class='tdfontmini'>".$f_Inversionistas['nombreinversionista']."</td>";
+                                                                        $acumulado = $acumulado + $f_Inversionistas['monto'];
+                                                                        echo "<td class='tdfontmini'>$ ".number_format($f_Inversionistas['monto'],2)."</td>
                                                                         <td class='tdfontmini'>".$f_Inversionistas['interes']." % </td>
                                                                         <td class='tdfontmini'>".$f_Inversionistas['comentarios']."</td>
                                                                         <td class='tdfontmini'>".$f_Inversionistas['fecha_registro']."</td>
@@ -1424,11 +1439,26 @@
                                                                         if($statusSaldo == "danger"){
                                                                             echo "<span class='label label-warning'>Credito pendiente</span>";
                                                                         }
-                                                                        echo "</td>
-                                                                        </tr>";
+                                                                        echo "</td>";
+                                                                        echo "<td class='tdfontmini'><a href='editar_inversionista_credito.php?id=".$fila_credito[0]."&incr=".$f_Inversionistas['id_inversionistas_creditos']."'>Editar</a></td>";
+                                                                        echo "</tr>";
                                                                     }
                                                                 }
                                                             }
+                                                            echo "<tfoot>
+                                                                    <tr>
+                                                                        <td class='tdfontmini'><b>Sumatoria</b></td>
+                                                                        <td class='tdfontmini'><b>$".number_format($acumulado,2)."</b></td>";
+                                                                        if($acumulado == $fila_credito[5]){
+                                                                            echo "<td class='tdfontmini-warning' colspan='6'>Sin posibilidad de agregar mas inversionistas, credito completo</td>";
+                                                                        }
+                                                                        if($acumulado > $fila_credito[5]){
+                                                                            echo "<td class='tdfontmini-danger' colspan='6'>Los montos asignados a los inversionistas exceden el monto total del credito, verificar.</td>";
+                                                                        }
+                                                                        if($acumulado < $fila_credito[5]){
+                                                                            echo "<td class='tdfontmini-green' colspan='6'>Monto aun disponible para asignar a inversionista</td>";
+                                                                        }
+                                                                        echo "</tr></tfoot>";
                                                         }else{
                                                             echo "<tr class='warning' ><td colspan='3'><center><i class='fa fa-info-circle' aria-hidden='true'></i> No existen Inversionistas Anteriores</center></td></tr>";
                                                         }
@@ -1482,7 +1512,7 @@
                                                 <tbody>
                                                     <tr><td class='tdfontmini'><center><b>Interes</b></center></td><td class='tdfontmini'><center><b>Fecha de Registro</b></center></td></tr>
                                                     <?php
-                                                        $q_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA = "SELECT * FROM histor_inter_inver_credit where id_credito=$fila_credito[0];";
+                                                        $q_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA = "SELECT * FROM histor_inter_inver_credit where id_credito=$fila_credito[0] order by 1 desc;";
                                                         $i_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA = mysqli_query($mysqli,$q_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA) or die(mysqli_error());
                                                         if(mysqli_num_rows($i_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA)>0){
                                                             while($f_HISTO_INT_APAGAR_INVER = mysqli_fetch_assoc($i_CONOCER_HISTORIAL_INTERES_A_PAGAR_INVERSIONISTA)){
