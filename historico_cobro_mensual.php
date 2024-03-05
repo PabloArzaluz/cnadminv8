@@ -83,10 +83,11 @@
 						          	 	$fechaTermina->format('Y-m-d');
 										
 										//Conocer Creditos
-										$conocer_montos_intereses_maximos = "SELECT coalesce(monto_a_fin_mes,0) from hist_calc_int_payments t1 where t1.monto_a_fin_mes=(SELECT max(t2.monto_a_fin_mes) from hist_calc_int_payments t2 where month(t2.datetime) = '".$fechaTermina->format('m')."' and year(t2.datetime) ='".$fechaTermina->format('Y')."');";
+										$conocer_montos_intereses_maximos = "SELECT coalesce(max(monto_a_fin_mes),0) from hist_calc_int_payments t1 where t1.monto_a_fin_mes=(SELECT max(t2.monto_a_fin_mes) from hist_calc_int_payments t2 where month(t2.datetime) = '".$fechaTermina->format('m')."' and year(t2.datetime) ='".$fechaTermina->format('Y')."');";
 										$iny_conocer_montos_intereses_maximos = mysqli_query($mysqli,$conocer_montos_intereses_maximos) or die(mysqli_error());
 
 										$fConocerMontosInteresesMaximos = mysqli_fetch_row($iny_conocer_montos_intereses_maximos);
+										
 										if($fConocerMontosInteresesMaximos[0]<=0){
 											echo "<td><span class='texto-peque cursiva'>Sin datos suficientes</span></td>";
 										}else{
