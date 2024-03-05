@@ -28,22 +28,22 @@
 	
 	if($id_inversionista != $f_CambInvEfec['id_inversionista']){
 		//Se cambio el Inversionista, hay que agregar al Historial
-		echo "secambio el inver<br>";
-    	echo $InsHisInv = "INSERT into historial_inversionistas_creditos(id_inversionista,id_credito,id_usuario,fechahora,comentarios) values ('".$f_CambInvEfec['id_inversionista']."','$id_credito','$usuario','$fecha $hora','".$f_CambInvEfec['comentarios']."');";
+		
+    	$InsHisInv = "INSERT into historial_inversionistas_creditos(id_inversionista,id_credito,id_usuario,fechahora,comentarios) values ('".$f_CambInvEfec['id_inversionista']."','$id_credito','$usuario','$fecha $hora','".$f_CambInvEfec['comentarios']."');";
     	$iny_InsHisInv = mysqli_query($mysqli,$InsHisInv) or die(mysqli_error());
 	}
 	
 	if($interes_api != $f_CambInvEfec['interes']){
 		//Hay que agregar al registro el cambio CUANDO SE CAMBIA EL INTERES
-		echo "se cambio el interes";
-		echo $q_INSERTAR_REGISTRO_CAMBIO_INTERES_INVER = "INSERT INTO histor_inter_inver_credit(id_credito,interes,fecha_inicio,id_inversionista) VALUES('$id_credito','$interes_api','$fecha $hora','$id_inversionista');";
+		
+		$q_INSERTAR_REGISTRO_CAMBIO_INTERES_INVER = "INSERT INTO histor_inter_inver_credit(id_credito,interes,fecha_inicio,id_inversionista) VALUES('$id_credito','$interes_api','$fecha $hora','$id_inversionista');";
 		$i_INSERTAR_REGISTRO_CAMBIO_INTERES_INVE = mysqli_query($mysqli,$q_INSERTAR_REGISTRO_CAMBIO_INTERES_INVER) or die(mysqli_error());
 	}
 	//ACTUALIZA INFORMACION COMPLETA
-	echo $q_ACTUALIZA_INFORMACION_GENERAL = "UPDATE inversionistas_creditos SET id_inversionista = '$id_inversionista', comentarios = '$comentarios', interes = '$interes_api', monto ='$monto_asignado' WHERE id_inversionistas_creditos='$inversionista_credito';";
+	$q_ACTUALIZA_INFORMACION_GENERAL = "UPDATE inversionistas_creditos SET id_inversionista = '$id_inversionista', comentarios = '$comentarios', interes = '$interes_api', monto ='$monto_asignado' WHERE id_inversionistas_creditos='$inversionista_credito';";
 	$i_ACTUALIZA_INFORMACION_GENERAL = mysqli_query($mysqli,$q_ACTUALIZA_INFORMACION_GENERAL) or die(mysqli_error());
 
 	$ruta = "detalle-credito.php?id=".$id_credito."&info=5";
-	//header('Location: '.$ruta);
+	header('Location: '.$ruta);
   ?>
 

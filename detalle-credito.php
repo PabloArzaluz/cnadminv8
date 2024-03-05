@@ -69,7 +69,7 @@
         }
         .tdfontmini-warning{
             font-size:8pt;
-            color:#056600;
+            color:#1192EB;
         }
         .tdfontmini-danger{
             font-size:8pt;
