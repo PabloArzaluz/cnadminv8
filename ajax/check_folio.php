@@ -1,6 +1,7 @@
 <?php
 sleep(1);
 include("../include/configuration.php");
+include("../conf/config.inc.php");
 if($_REQUEST)
 {
 	$username 	= $_REQUEST['username'];
