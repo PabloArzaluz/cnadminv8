@@ -38,7 +38,7 @@
 						);";
 
 		$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
-		$id_aval_insertado_1 = mysqli_insert_id();
+		$id_aval_insertado_1 = mysqli_insert_id($mysqli);
 
 		if (is_uploaded_file($_FILES['comprobante-aval-1']['tmp_name'])){
 			$archivo1 = explode(".",$_FILES['comprobante-aval-1']['name']);

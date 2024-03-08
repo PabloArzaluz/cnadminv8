@@ -37,7 +37,7 @@
 				'$comentarios');";
     			$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
         
-//$id_cliente = mysqli_insert_id();
+//$id_cliente = mysqli_insert_id($mysqli);
 
  header('Location: pagos.php?info=1');
 */

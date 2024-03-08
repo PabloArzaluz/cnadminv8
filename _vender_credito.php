@@ -22,7 +22,7 @@
 	$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 	$queryUpdate = "UPDATE creditos SET status = 4 WHERE id_creditos=$id_credito";
 	$resultadoUpdate= mysqli_query($mysqli,$queryUpdate) or die(mysqli_error());
-				//$id_cliente = mysqli_insert_id();
+				//$id_cliente = mysqli_insert_id($mysqli);
     
     //unset($_SESSION['id_cliente']);
     //unset($_SESSION['id_credito']);

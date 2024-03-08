@@ -123,7 +123,7 @@
 										$conocer_inversionistas = "SELECT * FROM inversionistas where status='activo' ;";
 										if ($i_conocer_inversionistas = $mysqli->query($conocer_inversionistas)) {
 											while ($f_conocer_inversionistas = $i_conocer_inversionistas->fetch_assoc()) {
-												echo "<option value='".$f_conocer_inversionistas['id_inversionistas']."'>".$f_conocer_inversionistas{'nombre'}."</option>";
+												echo "<option value='".$f_conocer_inversionistas['id_inversionistas']."'>".$f_conocer_inversionistas['nombre']."</option>";
 											}
 										}
 									?>
@@ -203,7 +203,7 @@
 									$conocer_inversionistas = "SELECT * FROM inversionistas where status='activo' ;";
 									if ($i_conocer_inversionistas= $mysqli->query($conocer_inversionistas)) {
 										while ($f_conocer_inversionistas = $i_conocer_inversionistas->fetch_assoc()) {
-											echo "<option value='".$f_conocer_inversionistas['id_inversionistas']."'>".$f_conocer_inversionistas{'nombre'}."</option>";
+											echo "<option value='".$f_conocer_inversionistas['id_inversionistas']."'>".$f_conocer_inversionistas['nombre']."</option>";
 										}
 									}
 								?>

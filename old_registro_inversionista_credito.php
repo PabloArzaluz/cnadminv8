@@ -47,7 +47,7 @@
 
     			//$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 
-				//$id_cliente_insertado = mysqli_insert_id();
+				//$id_cliente_insertado = mysqli_insert_id($mysqli);
 
 
 		if (isset($_POST['info']) && $_POST['info'] == '1'){

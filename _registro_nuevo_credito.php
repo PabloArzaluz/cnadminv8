@@ -1,5 +1,6 @@
 <?php
 	session_start(); // crea una sesion
+	error_reporting(E_ALL); ini_set("display_errors", 1);
 	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
@@ -110,7 +111,7 @@
 					                )";
 
 					    $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
-					    $id_cliente_insertado = mysqli_insert_id();
+					    $id_cliente_insertado = mysqli_insert_id($mysqli);
 						//Se inicializa la variable Credito para el proceso de registro
 			            if(isset($_SESSION['id_credito'])){
 		                    unset($_SESSION['id_credito']);

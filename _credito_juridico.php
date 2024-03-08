@@ -25,7 +25,7 @@
 		$query_agregar_juridico = "INSERT INTO juridicos(id_credito, fecha_registro, usuario_registro, juzgado, expediente, etapaprocesal, convenios_path, convenios_file_name, comentarios) 
 									VALUES('$id_credito', '$fecha_registro', '$usuario_registro', '$juzgado', '$expediente', '$etapa_procesal', '', '', '$comentarios');";
 		$ini_query_agregar_juridico = mysqli_query($mysqli,$query_agregar_juridico) or die(mysqli_error());
-		$last_id = mysqli_insert_id($link);
+		$last_id = mysqli_insert_id($mysqli);
 
 		//Carga de Archivo de Convenio
 		if (is_uploaded_file($_FILES['convenio']['tmp_name'])){

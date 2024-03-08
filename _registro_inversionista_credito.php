@@ -48,7 +48,7 @@
 
 	
 
-	//$id_cliente = mysqli_insert_id();
+	//$id_cliente = mysqli_insert_id($mysqli);
 
     
   ?>

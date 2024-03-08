@@ -56,7 +56,7 @@
 
     			$resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 
-				$id_cliente_insertado = mysqli_insert_id();
+				$id_cliente_insertado = mysqli_insert_id($mysqli);
 
 
 		if (is_uploaded_file($_FILES['file1']['tmp_name'])){

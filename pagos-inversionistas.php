@@ -117,53 +117,47 @@
 								<tbody>
 									<?php
 										//Consulta Pagos
-										$iny_pagos = mysqli_query($mysqli,"SELECT 
-																pinversionistas.id_pinversionistas,
-																pinversionistas.id_credito,
-																pinversionistas.id_inversionista,
-																inversionistas.nombre,
-																clientes.nombres,
-																clientes.apaterno,
-																clientes.amaterno,
-                                                                pinversionistas.tipo_pago,
-																pinversionistas.monto,
-																pinversionistas.fecha_captura,
-																pinversionistas.usuario_captura,
-																creditos.folio
-																FROM
-																pinversionistas
-																INNER JOIN
-																creditos
-																ON
-																creditos.id_creditos = pinversionistas.id_credito
-																INNER JOIN
-																clientes
-																ON
-																creditos.id_cliente = clientes.id_clientes
-																INNER JOIN
-																inversionistas
-																ON
-																creditos.id_inversionista = inversionistas.id_inversionistas;") or die (mysqli_error());
+									$q_pago_inversionistas = "SELECT 
+									p.id_pinversionistas AS id_pago,
+									cr.id_creditos,
+									cr.folio,
+									p.id_inversionista AS id_inversionista,
+									i.nombre AS nombre_inversionista,
+									c.nombres AS nombrecliente,
+									c.apaterno as  apaternocliente,
+									c.amaterno as  amaternocliente,
+									p.tipo_pago,
+									p.monto,
+									p.fecha_captura
+								FROM 
+									pinversionistas p
+								INNER JOIN 
+									inversionistas i ON p.id_inversionista = i.id_inversionistas
+								INNER JOIN 
+									creditos cr ON p.id_credito = cr.id_creditos
+								INNER JOIN 
+									clientes c ON cr.id_cliente = c.id_clientes order by 1 desc;";
+										$iny_pagos = mysqli_query($mysqli,$q_pago_inversionistas) or die (mysqli_error());
 										if(mysqli_num_rows($iny_pagos) > 0){
-							              while($row = mysqli_fetch_array($iny_pagos)){
+							              while($row = mysqli_fetch_assoc($iny_pagos)){
 							                echo "<tr>
-											<td>$row[0]</td>
-							                <td><a href='detalle-credito.php?id=$row[1]'>[$row[11]]</a></td>
-							                <td><a href='detalle-inversionista.php?id=$row[2]'>".$row[3]."</a></td>
-							                <td>".$row[4]." ".$row[5]." ".$row[6]."</td>
+											<td>".$row['id_pago']."</td>
+							                <td><a href='detalle-credito.php?id=".$row['id_creditos']."'>[".$row['folio']."]</a></td>
+							                <td><a href='detalle-inversionista.php?id=".$row['id_inversionista']."'>".$row['nombre_inversionista']."</a></td>
+							                <td>".$row['nombrecliente']." ".$row['apaternocliente']." ".$row['amaternocliente']."</td>
 											<td>";
-											if($row[7] == 'interes'){
+											if($row['tipo_pago'] == 'interes'){
                                                  echo "<span class='label label-success'>Pago de Intereses</span>";
                                              }
-                                            if($row[7] == 'capital'){
+                                            if($row['tipo_pago'] == 'capital'){
                                                  echo "<span class='label label-primary'>Pago a Capital</span>";
                                              }
 											  echo "</td>";
-							                echo "<td>$".number_format(($row[8]),2)."</td>
+							                echo "<td>$".number_format(($row['monto']),2)."</td>
 
 							                
 											<td>";
-                                            $date = new DateTime($row[9]);
+                                            $date = new DateTime($row['fecha_captura']);
                                             echo date_format($date, 'd-m-Y g:i a');
                                             echo "</td>";
                                             

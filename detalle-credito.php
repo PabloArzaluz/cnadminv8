@@ -1230,8 +1230,9 @@
                                             </table>
                                             <table class="table table-bordered">
                                                 <tr><th><center>Total Pagos de Interes</center></th></tr>
-                                                <?php
-                                                        $iny_conocer_intereses = mysqli_query($mysqli,"select sum(monto) as intereses from pagos where id_credito='".$fila_credito[0]."' and tipo_pago=1;")or die(mysqli_error());
+                                                <?php   
+                                                        $q_conocer_intereses = "select coalesce(sum(monto),0) as intereses from pagos where id_credito='".$fila_credito[0]."' and tipo_pago=1;";
+                                                        $iny_conocer_intereses = mysqli_query($mysqli,$q_conocer_intereses)or die(mysqli_error());
                                                         if(mysqli_num_rows($iny_conocer_intereses)>0){
                                                              $fila_intereses = mysqli_fetch_row($iny_conocer_intereses);
                                                         }

@@ -22,7 +22,7 @@
    $query = "UPDATE creditos SET motivo_finalizacion_credito = '$motivo',comentario_finalizacion_credito = '$comentarios',status='2',fecha_cierre_credito='$fecha' WHERE id_creditos = '$id_credito';";
     $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
 
-				//$id_cliente = mysqli_insert_id();
+				//$id_cliente = mysqli_insert_id($mysqli);
     
     //unset($_SESSION['id_cliente']);
     //unset($_SESSION['id_credito']);

@@ -127,7 +127,7 @@
 						</div>
 						<?php 
 							//Consultar Creditos
-							$conocer_total_creditos = mysqli_query($mysqli,"select count(id_inversionista) from creditos where id_inversionista=$id_inversionista;") or die(mysqli_error());
+							$conocer_total_creditos = mysqli_query($mysqli,"select count(id_inversionista) from inversionistas_creditos where id_inversionista=$id_inversionista and estatus_en_credito=1;	") or die(mysqli_error());
 							$cantidad_creditos = mysqli_fetch_row($conocer_total_creditos);
 						
 						?>
@@ -149,39 +149,63 @@
 									
 									<!-- CONOCER INFORMACION DE CREDITOS -->
 									<?php
-										$creditos_asociados = mysqli_query($mysqli,"select * from creditos where id_inversionista=$id_inversionista ORDER BY folio desc	;") or die(mysqli_error());
+										$q_creditos_asociados = "select 
+										creditos.id_creditos,
+										creditos.id_cliente,
+										creditos.folio,
+										creditos.monto as montototalcredito,
+										inversionistas_creditos.monto as montoasignadoinversionista,
+										inversionistas_creditos.interes as interesinversionistacredito,
+										creditos.fechadealta,
+										creditos.status as estatuscredito,
+										creditos.fecha_prestamo
+									FROM
+										inversionistas_creditos
+									INNER JOIN creditos
+									on inversionistas_creditos.id_credito = creditos.id_creditos
+									WHERE inversionistas_creditos.id_inversionista =$id_inversionista ORDER BY folio desc;";
+										$creditos_asociados = mysqli_query($mysqli,$q_creditos_asociados) or die(mysqli_error());
 										$SaldoRestanteCreditos = 0;
 										if(mysqli_num_rows($creditos_asociados)>0){
-                                        	while($fCreditos = mysqli_fetch_array($creditos_asociados)){
+                                        	while($fCreditos = mysqli_fetch_assoc($creditos_asociados)){
 												
-												$conocer_informacion_cliente = mysqli_query($mysqli,"select * from clientes where id_clientes = $fCreditos[1];") or die(mysqli_error());
+												$conocer_informacion_cliente = mysqli_query($mysqli,"select * from clientes where id_clientes = ".$fCreditos['id_cliente'].";") or die(mysqli_error());
 												$fCliente = mysqli_fetch_row($conocer_informacion_cliente);
-												
+												echo "<hr>";
+												echo "<br>";
+												echo "<br>";
+												echo "<br>";
 												echo "<table style='width:100%;'>
+														
 														<tr style='border-bottom:1px solid #778899;'>
-															<td style=''><strong><a href='detalle-credito.php?id=$fCreditos[0]'>Credito No: $fCreditos[21]</a></strong></td>
+															<td style=''><strong><a href='detalle-credito.php?id=".$fCreditos['id_creditos']."'>Credito No: ".$fCreditos['folio']."</a></strong></td>
 															<td style=''><strong>".strtoupper($fCliente[1])." ".strtoupper($fCliente[2])." ".strtoupper($fCliente[3])."</strong></td>
-															<td style=''><strong> $ ".number_format(($fCreditos[5]),2)."</strong></td>
-															<td style=''><strong> Interes hacia el Inversionista: <span class='label label-primary'>".$fCreditos[29]."%</span></strong></td>
-															<td style=''>Fecha Alta: (FA): <strong>".date("d/m/Y",strtotime($fCreditos[28]))."</strong></td>";
-														 if($fCreditos[12] == 1){
+															<td style=''></td>
+															<td style=''><strong> Interes hacia el Inversionista: <span class='label label-primary'>".$fCreditos['interesinversionistacredito']."%</span></strong></td>
+															<td style=''>Fecha Alta: (FA): <strong>".date("d/m/Y",strtotime($fCreditos['fechadealta']))."</strong></td>";
+														 if($fCreditos['estatuscredito'] == 1){
 																//Activo
 																echo "<td><span class='label label-success'>ACTIVO</span></td>";
 															}
-															if($fCreditos[12] == 2){
+															if($fCreditos['estatuscredito'] == 2){
 																//Activo
 																echo "<td><span class='label label-default'>FINALIZADO</span></td>";
 															}
-															if($fCreditos[12] == 3){
+															if($fCreditos['estatuscredito'] == 3){
 																//Activo
 																echo "<td><span class='label label-danger'>JURIDICO</span></td>";
 															}
 
-												echo "	</tr>
-													</table><br>";
+												echo "	</tr>";
+														echo "<tr>
+														<td colspan=4>Monto Asignado a este Inversionista: <strong> $ ".number_format(($fCreditos['montoasignadoinversionista']),2)."</strong></td>
+														<td>Monto total del credito: <i> $ ".number_format(($fCreditos['montototalcredito']),2)."</i></td>
+														
+														</tr>";
+													echo "</table><br>";
 												echo "<div class='row'>
 														<div class='col-xs-6'>";
-												$conocer_pagos_inversionista = "select * from pinversionistas where id_credito = $fCreditos[0] AND tipo_pago='interes';";
+												$conocer_pagos_inversionista = "select * from pinversionistas where id_credito = ".$fCreditos['id_creditos']." AND tipo_pago='interes'  and id_inversionista = $id_inversionista;; ";
 												$iny_conocer_pagos_inversionista  = mysqli_query($mysqli,$conocer_pagos_inversionista) or die(mysqli_error());
 												$acumuladopagosInteres = 0;
 												if(mysqli_num_rows($iny_conocer_pagos_inversionista)>0){
@@ -189,7 +213,7 @@
 													<thead><th>Fecha</th><th>Monto</th></thead><tbody>
 														";
                                         			while($fpagosInversionista = mysqli_fetch_array($iny_conocer_pagos_inversionista)){
-														echo "<tr><td><span data-toggle='tooltip' title='".strftime('%A,  %d de %B del %Y',strtotime($fpagosInversionista[5]))."'>".date("d/m/Y",strtotime($fpagosInversionista[5]))."</span></td><td>$".number_format(($fpagosInversionista[3]),2)."</td></tr>";
+														echo "<tr><td><span data-toggle='tooltip' title='".date('l  d F Y H:i:s',strtotime($fpagosInversionista[5]))."'>".date("d/m/Y",strtotime($fpagosInversionista[5]))."</span></td><td>$".number_format(($fpagosInversionista[3]),2)."</td></tr>";
 														$acumuladopagosInteres += $fpagosInversionista[3];
 													}
 													echo "</tbody></table>";
@@ -209,31 +233,31 @@
 												
 												
 												
-												$fecha_de_inicio = explode("-", $fCreditos[4]);
-												$nuevafecha = strtotime ( '+1 month' , strtotime ( $fCreditos[4] ) ) ;
+												$fecha_de_inicio = explode("-", $fCreditos['fecha_prestamo']);
+												$nuevafecha = strtotime ( '+1 month' , strtotime ( $fCreditos['fecha_prestamo'] ) ) ;
 												$ano_proxima_fecha = date ( 'Y' , $nuevafecha );
 												$mes_proxima_fecha = date ( 'm' , $nuevafecha );
 												$dia_proxima_fecha = 15;
 												$proxima_fecha = $ano_proxima_fecha."-".$mes_proxima_fecha."-".$dia_proxima_fecha;
-												$dias_diferencia = diferenciaDias($fCreditos[4], $proxima_fecha);
-												$pago_inicial = $fCreditos[5]*(((1.5/100)/30)*$dias_diferencia);
-												echo '<div class="label label-default"><b>'.$dias_diferencia.' dias</b> desde <b>'.$fCreditos[4].'</b> hasta <b>'.$proxima_fecha.'</b>, por un total de $'.number_format(($pago_inicial),2).'</div>';
+												$dias_diferencia = diferenciaDias($fCreditos['fecha_prestamo'], $proxima_fecha);
+												$pago_inicial = $fCreditos['montototalcredito']*(((1.5/100)/30)*$dias_diferencia);
+												echo '<div class="label label-default"><b>'.$dias_diferencia.' dias</b> desde <b>'.$fCreditos['fecha_prestamo'].'</b> hasta <b>'.$proxima_fecha.'</b>, por un total de $'.number_format(($pago_inicial),2).'</div>';
 												
 												echo "<br>";
 												
 												
 												echo "</div>
 												<div class='col-xs-6'>";
-												$conocer_pagos_inversionista = "select * from pinversionistas where id_credito = $fCreditos[0] AND tipo_pago='capital';";
+												$conocer_pagos_inversionista = "select * from pinversionistas where id_credito = ".$fCreditos['id_creditos']." AND tipo_pago='capital' and id_inversionista = $id_inversionista;";
 												$iny_conocer_pagos_inversionista  = mysqli_query($mysqli,$conocer_pagos_inversionista) or die(mysqli_error());
 												$acumuladopagos = 0;
-												$saldoinicial = $fCreditos[5];
+												$saldoinicial = $fCreditos['montoasignadoinversionista'];
 												if(mysqli_num_rows($iny_conocer_pagos_inversionista)>0){
 													echo"<table class='table table-bordered'>
 													<thead><th>Fecha</th><th>Monto</th></thead><tbody>
 														";
                                         			while($fpagosInversionista = mysqli_fetch_array($iny_conocer_pagos_inversionista)){
-														echo "<tr><td><span data-toggle='tooltip' title='".date('l  d F Y',strtotime($fpagosInversionista[5]))."'>".date("d/m/Y",strtotime($fpagosInversionista[5]))."</span></td><td>$".number_format(($fpagosInversionista[3]),2)."</td></tr>";
+														echo "<tr><td><span data-toggle='tooltip' title='".date('l  d F Y H:i:s',strtotime($fpagosInversionista[5]))."'>".date("d/m/Y",strtotime($fpagosInversionista[5]))."</span></td><td>$".number_format(($fpagosInversionista[3]),2)."</td></tr>";
 														//echo "<tr><td><span data-toggle='tooltip' title='".strftime('%A,  %d de %B del %Y',strtotime($fpagosInversionista[5]))."'>".date("d/m/Y",strtotime($fpagosInversionista[5]))."</span></td><td>$".number_format(($fpagosInversionista[3]),2)."</td></tr>";
 														$acumuladopagos += $fpagosInversionista[3];
 													}

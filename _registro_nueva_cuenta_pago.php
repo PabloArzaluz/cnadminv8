@@ -36,7 +36,7 @@
                         '$usuario_registro'
                     );";
     $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
-	//$id_cliente = mysqli_insert_id();
+	//$id_cliente = mysqli_insert_id($mysqli);
     //unset($_SESSION['id_cliente']);
     //unset($_SESSION['id_credito']);
     header('Location: cuentas-bancarias.php?info=1');
