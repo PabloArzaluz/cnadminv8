@@ -2,9 +2,9 @@
 
 	//Conexion A Servidor Remoto
 	$dbhost="localhost";
-	$dbuser="root";
-	$dbpass="";
-	$dbname="portal_cn_v8";
+	$dbuser="cn_us_db";
+	$dbpass="6kGKVNM4pei6ISx";
+	$dbname="cn_prtl_sl";
 /*
 	//Conexion A Servidor Local
 	$dbhost="localhost";
