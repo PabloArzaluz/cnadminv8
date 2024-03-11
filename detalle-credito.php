@@ -1396,7 +1396,7 @@
                                                     <td class='tdfontmini'><center><b>Oper</b></center></td></tr>
                                                     <?php
                                                         $conocerInversionistas = "select id_inversionistas_creditos,inversionistas_creditos.id_inversionista,nombre as nombreinversionista,monto,interes,inversionistas_creditos.comentarios,inversionistas_creditos.fecha_registro from inversionistas_creditos
-                                                        INNER JOIN inversionistas on inversionistas.id_inversionistas = inversionistas_creditos.id_inversionista where inversionistas_creditos.id_credito=".$fila_credito[0].";";
+                                                        INNER JOIN inversionistas on inversionistas.id_inversionistas = inversionistas_creditos.id_inversionista where inversionistas_creditos.id_credito=".$fila_credito[0]." and inversionistas_creditos.estatus_en_credito=1;";
                                                         $iny_ConocerInversionistas = mysqli_query($mysqli,$conocerInversionistas) or die ('Unable to execute query. '. mysqli_error($mysqli));
                                                         $cantidadcouenta = mysqli_num_rows($iny_ConocerInversionistas);
                                                         
@@ -1441,7 +1441,7 @@
                                                                             echo "<span class='label label-warning'>Credito pendiente</span>";
                                                                         }
                                                                         echo "</td>";
-                                                                        echo "<td class='tdfontmini'><a href='editar_inversionista_credito.php?id=".$fila_credito[0]."&incr=".$f_Inversionistas['id_inversionistas_creditos']."'>Editar</a></td>";
+                                                                        echo "<td class='tdfontmini'><a href='editar_inversionista_credito.php?id=".$fila_credito[0]."&incr=".$f_Inversionistas['id_inversionistas_creditos']."'>Editar</a> <a href='supr_inv_cr.php?id=".$fila_credito[0]."&incr=".$f_Inversionistas['id_inversionistas_creditos']."'>Eliminar</a></td>";
                                                                         echo "</tr>";
                                                                     }
                                                                 }
@@ -1457,7 +1457,7 @@
                                                                             echo "<td class='tdfontmini-danger' colspan='6'>Los montos asignados a los inversionistas exceden el monto total del credito, verificar.</td>";
                                                                         }
                                                                         if($acumulado < $fila_credito[5]){
-                                                                            echo "<td class='tdfontmini-green' colspan='6'>Monto aun disponible para asignar a inversionista</td>";
+                                                                            echo "<td class='tdfontmini-green' colspan='6'>Monto aun disponible para asignar a inversionista <a class='btn btn-xs btn-success' href='agg_inv_cr.php?c=".$fila_credito[0]."'><i class='fa fa-plus'></i> Agregar In</a></td>";
                                                                         }
                                                                         echo "</tr></tfoot>";
                                                         }else{
