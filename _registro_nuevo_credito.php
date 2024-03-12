@@ -40,7 +40,13 @@
 						$isseg = $_POST['isseg'];
 						
 						$monto_credito_anterior_amp = $_POST['monto-credito-anterior-amp'];
+						if($monto_credito_anterior_amp == ''){
+							$monto_credito_anterior_amp = '0.0';
+						}
 						$monto_credito_nuevo_amp = $_POST['monto-credito-nuevo-amp'];
+						if($monto_credito_nuevo_amp == ''){
+							$monto_credito_nuevo_amp = '0.0';
+						}
 						$query= "INSERT INTO creditos (
 								id_cliente,
 								fecha_captura,
