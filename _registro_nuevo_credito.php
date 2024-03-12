@@ -106,8 +106,8 @@
 									'$infonavit',
 									'$isseg',
 									
-									$monto_credito_anterior_amp,
-									$monto_credito_nuevo_amp
+									'$monto_credito_anterior_amp',
+									'$monto_credito_nuevo_amp'
 					                )";
 
 					    $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
