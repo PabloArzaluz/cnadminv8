@@ -1,7 +1,6 @@
 <?php
-
 	session_start(); // crea una sesion
-	include("include/configuration.php");
+	include("../include/configuration.php");
 	date_default_timezone_set('America/Mexico_City');
 	setlocale(LC_ALL, 'es_MX.UTF-8');
 
