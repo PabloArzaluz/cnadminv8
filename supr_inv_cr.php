@@ -9,8 +9,9 @@
 		header("Location: index.php");
 	}
 	$pagina_actual = "prestamos";
+	
 	//PERMISOS
-	if(validarAccesoModulos('permiso_inversionistas') != 1) {
+	if(validarAccesoModulos('permiso_inversionistas_cambiar_credito') != 1) {
 		header("Location: dashboard.php");
 	}
 	//FIN PERMISOS

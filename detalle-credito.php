@@ -1440,9 +1440,11 @@
                                                                         if($statusSaldo == "danger"){
                                                                             echo "<span class='label label-warning'>Credito pendiente</span>";
                                                                         }
-                                                                        echo "</td>";
-                                                                        echo "<td class='tdfontmini'><a href='editar_inversionista_credito.php?id=".$fila_credito[0]."&incr=".$f_Inversionistas['id_inversionistas_creditos']."'>Editar</a> <a href='supr_inv_cr.php?id=".$fila_credito[0]."&incr=".$f_Inversionistas['id_inversionistas_creditos']."'>Eliminar</a></td>";
-                                                                        echo "</tr>";
+                                                                        echo "</td><td class='tdfontmini'>";
+                                                                        if(validarAccesoModulos('permiso_inversionistas_cambiar_credito') == 1){
+                                                                            echo "<a href='editar_inversionista_credito.php?id=".$fila_credito[0]."&incr=".$f_Inversionistas['id_inversionistas_creditos']."'>Editar</a> <a href='supr_inv_cr.php?id=".$fila_credito[0]."&incr=".$f_Inversionistas['id_inversionistas_creditos']."'>Eliminar</a>";
+                                                                        }
+                                                                        echo "</td></tr>";
                                                                     }
                                                                 }
                                                             }
@@ -1457,7 +1459,11 @@
                                                                             echo "<td class='tdfontmini-danger' colspan='6'>Los montos asignados a los inversionistas exceden el monto total del credito, verificar.</td>";
                                                                         }
                                                                         if($acumulado < $fila_credito[5]){
-                                                                            echo "<td class='tdfontmini-green' colspan='6'>Monto aun disponible para asignar a inversionista <a class='btn btn-xs btn-success' href='agg_inv_cr.php?c=".$fila_credito[0]."'><i class='fa fa-plus'></i> Agregar In</a></td>";
+                                                                            if(validarAccesoModulos('permiso_inversionistas_cambiar_credito') == 1){
+                                                                                echo "<td class='tdfontmini-green' colspan='6'>Monto aun disponible para asignar a inversionista <a class='btn btn-xs btn-success' href='agg_inv_cr.php?c=".$fila_credito[0]."'><i class='fa fa-plus'></i> Agregar In</a></td>";
+                                                                            }else{
+                                                                                echo "<td class='tdfontmini-green' colspan='6'></td>";
+                                                                            }
                                                                         }
                                                                         echo "</tr></tfoot>";
                                                         }else{

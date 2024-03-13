@@ -4,6 +4,10 @@
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	
+  if(validarAccesoModulos('permiso_inversionistas_cambiar_credito') != 1) {
+		header("Location: dashboard.php");
+	}
+
 	date_default_timezone_set('America/Mexico_City');
 	if(!isset($_SESSION['id_usuario'])){
 		header("Location: index.php");
