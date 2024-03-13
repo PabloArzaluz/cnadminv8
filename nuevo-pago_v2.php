@@ -120,7 +120,7 @@
 							
 							var mensaje_excedente = "";
 							if(excedente > 0){
-								mensaje_excedente = "Hay excedente por: $"+excedente+", se capturara como pago moratorio";
+								mensaje_excedente = "Hay excedente por: $"+excedente+", favor de ingresar el monto en el campo de Interes Moratorio para vincular el pago con este folio. En caso contrario registrar nuevo pago con folio independiente";
 							}
 							if(excedente < 0){
 								mensaje_excedente = "El pago regular esta incompleto";
@@ -165,6 +165,28 @@
 		//Al seleccionar el credito se habilitar el campo de tipo de pago
 		select_tipo_pago.onchange = function () {
 			if (this.value != "" || this.value.length > 0) {
+				if(this.value == 4){
+					<?php //se Selecciono moratorios ?>
+					$("#MoratorioSpace").html("");
+				}
+				if(this.value == 2){
+					
+					$("#MoratorioSpace").html("");	
+				}
+				if(this.value == 1){
+					
+					$("#MoratorioSpace").html(`
+												
+												<label for='monto-pago-moratorio' class='col-sm-5 control-label'>Monto del Pago de Interes Moratorio Vinculado</label>
+												<div class='col-md-6'>
+												<div class='input-group'>
+												<span class='input-group-addon'>$</span>
+												<input type='number'  step='0.01' min='0' class='form-control noscroll' id='monto-pago-moratorio' name='monto-pago-moratorio' placeholder='Monto Pago Moratorio'>
+												</div>
+												</div>
+												
+												`);
+				}
 				$("#InfoMonto").html("");
 				document.getElementById("monto-pago").value = "";
 				document.getElementById('monto-pago').removeAttribute("disabled");
@@ -342,7 +364,7 @@ input[type=number] {
 													<option value="">Seleccione una opcion</option>
 													<option value="1">Pago Mensual de Intereses</option>
                                                     <option value="2"> Pago de Capital</option>
-                                                    
+                                                    <option value="4"> Interes Moratorios</option>
 												</select>
 											</div>
 										</div>
@@ -356,7 +378,7 @@ input[type=number] {
 											</div>
 											
 										</div>
-										
+										<div id="MoratorioSpace" class='form-group'></div>
 										<div id="InfoMonto">
 										</div>
 										

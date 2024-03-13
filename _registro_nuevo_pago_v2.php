@@ -3,7 +3,7 @@
 	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
-	
+	error_reporting(E_ALL); ini_set("display_errors", 1);
 	date_default_timezone_set('America/Mexico_City');
 	include("include/functions.php");
 	include("include/funciones.php");
@@ -71,15 +71,15 @@
                     '$metodo_pago'
                 );";
             $iny_insertar_pago = mysqli_query($mysqli,$insertar_pago) or die(mysqli_error());
-
-            if($excedente > 0){
+            if($_POST['monto-pago-moratorio'] != ""){
+                $monto_pago_moratorio = $_POST['monto-pago-moratorio'];
                 //Hay excedente
                 $insertar_pago_moratorio = "INSERT into pagos(id_usuario,fecha_captura,id_credito,fecha_pago,monto,tipo_pago,comentarios,folio_fisico,saldo_capital,interes_cobrado,saldo_mes_intereses,modulo_registro,metodo_pago) values(
                     '$usuario_captura',
                     '$fecha_captura',
                     '$credito',
                     '$fecha_pago',
-                    '$excedente',
+                    '$monto_pago_moratorio',
                     '4',
                     'MORATORIO-$comentarios',
                     'M-$folio_fisico',
@@ -89,20 +89,41 @@
                     '$modulo_registro',
                     '$metodo_pago'
                 );";
-            $iny_insertar_pago_moratorio = mysqli_query($mysqli,$insertar_pago_moratorio) or die(mysqli_error());
-            //Inserta log para monitoreo
-            $insertar_log_pago_moratorio = "INSERT into log_pago_moratorio(folio_pago,fecha_captura,monto_original) values(
-                'M-$folio_fisico',
-                '$fecha_captura',
-                '$monto_pago'
-            );";
-            $iny_insertar_log_pago_moratorio = mysqli_query($mysqli,$insertar_log_pago_moratorio) or die(mysqli_error());
+                $iny_insertar_pago_moratorio = mysqli_query($mysqli,$insertar_pago_moratorio) or die(mysqli_error());
+                //Inserta log para monitoreo
+
+                $insertar_log_pago_moratorio = "INSERT into log_pago_moratorio(folio_pago,fecha_captura,monto_original) values(
+                    'M-$folio_fisico',
+                    '$fecha_captura',
+                    '$monto_pago'
+                );";
+                $iny_insertar_log_pago_moratorio = mysqli_query($mysqli,$insertar_log_pago_moratorio) or die(mysqli_error());
             }
 			header('Location: pagos.php?info=1');
 		}
 
 		if($tipo_pago == 2){
 			//Pago de Capital
+			$saldo_capital = conocer_monto_deudor($credito);
+			$query= "INSERT INTO pagos (id_usuario,fecha_captura,id_credito,fecha_pago,monto,tipo_pago,comentarios,folio_fisico,saldo_capital,modulo_registro,metodo_pago)
+	   				VALUES
+				('$usuario_captura',
+					'$fecha_captura',
+					'$credito',
+					'$fecha_pago',
+					'$monto_pago',
+					'$tipo_pago',
+					'$comentarios',
+	                '$folio_fisico',
+	                '$saldo_capital',
+					'$modulo_registro',
+					'$metodo_pago'
+	                );";
+		    $resultado= mysqli_query($mysqli,$query) or die(mysqli_error());
+		    header('Location: pagos.php?info=1');
+		}
+        if($tipo_pago == 4){
+			//Pago de Moratorio
 			$saldo_capital = conocer_monto_deudor($credito);
 			$query= "INSERT INTO pagos (id_usuario,fecha_captura,id_credito,fecha_pago,monto,tipo_pago,comentarios,folio_fisico,saldo_capital,modulo_registro,metodo_pago)
 	   				VALUES
