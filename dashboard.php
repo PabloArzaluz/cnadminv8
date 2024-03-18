@@ -3,7 +3,7 @@
 	error_reporting(E_ALL); ini_set("display_errors", 1);
 
 	//Redirect Denied
-	if(!isset($_SESSION['id_usuario'])){ header("Location: index.php");}
+	if(!isset($_SESSION['id_usuario'])){ header("Location: index.php");exit();}
 
 	include("include/configuration.php");
 	include("conf/conecta.inc.php");
