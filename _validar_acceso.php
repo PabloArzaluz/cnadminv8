@@ -10,47 +10,53 @@
 		header("Location: index.php");
 	}
 
-	//echo $_POST['password'];
-    $username= $_POST['user'];
-    $pass = $_POST['password'];
-    //$contraseña= md5($pass);
-
-	$contrasena= $pass;
-	$selecciona_usuario = "select * from usuario where username='$username' and password = '$contrasena' and status=1";
-	$validar_acceso = mysqli_query($mysqli,$selecciona_usuario) or die(mysqli_error());
-
- 	if(mysqli_num_rows($validar_acceso)>0){
+	if(isset($_POST['user'])){
 		
- 		$fila = mysqli_fetch_row($validar_acceso);
-
-		//Validar Permiso a Portal Administrativo
-		if($fila[9] != 1){
-			//Sin permiso a portal Administrativo
+		$username= $_POST['user'];
+		$pass = $_POST['password'];
+		//$contraseña= md5($pass);
+	
+		//procedural 
+		$mysqliConnProc   = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
+		$stmt = $mysqliConnProc->prepare("SELECT id_user,level,nombre,accesoAdministrativo from usuario where username=? and password = ? and status=1 limit 1");
+		$stmt->bind_param("ss",$username,$pass);
+		$stmt->execute();
+		$stmt->bind_result($id_usuario,$nivel_user,$nombre_user,$permisoPortalAdmin);
+		$stmt->store_result();
+	
+		if($stmt->num_rows == 1){
+			while($stmt->fetch()){
+				if($permisoPortalAdmin != 1){
+					//Sin permiso a portal Administrativo
+					header('Location: index.php?alert=1&det=SAA');
+					return 0; 
+				}
+			//Hay coincodencia
+			$_SESSION['id_usuario'] = $id_usuario;
+			 $_SESSION['level_user'] = $nivel_user;
+			$_SESSION['nombre_user'] = $nombre_user;
 			
-			header('Location: index.php?alert=1&det=SAA');
-			return 0; 
+			//Registra acceso en BD
+			$query_registrarLogAcceso = "INSERT INTO logacceso(idUser,horaacceso) values(".$id_usuario.",'".horafecha()."');";
+			$registrarLogAcceso = mysqli_query($mysqli,$query_registrarLogAcceso) or die (mysqli_error());
+			$query_registrarLastLogin = "UPDATE usuario set lastLogin='".horafecha()."' WHERE id_user='".$id_usuario."';";
+			$registrarLastLogin = mysqli_query($mysqli,$query_registrarLastLogin) or die (mysqli_error());
+			//Fin Registra Acceso en BD
+			
+			//Genera Permisos
+			$selecciona_permisos = "select * from permisos where idUsuario='".$id_usuario."';";
+			$iny_selecciona_permisos =  mysqli_query($mysqli,$selecciona_permisos) or die(mysqli_error());
+			$filaPermisos = mysqli_fetch_assoc($iny_selecciona_permisos);
+			$_SESSION['permisos_modulos'] = $filaPermisos;
+			 header('Location: dashboard.php');
+			}
+		}else{
+			header('Location: index.php?alert=1');
 		}
-
- 		$_SESSION['id_usuario'] = $fila[0];
- 		$_SESSION['level_user'] = $fila[4];
-		$_SESSION['nombre_user'] = $fila[5];
-		//Registra acceso en BD
-		$query_registrarLogAcceso = "INSERT INTO logacceso(idUser,horaacceso) values(".$fila[0].",'".horafecha()."');";
-		$registrarLogAcceso = mysqli_query($mysqli,$query_registrarLogAcceso) or die (mysqli_error());
-		$query_registrarLastLogin = "UPDATE usuario set lastLogin='".horafecha()."' WHERE id_user='".$fila[0]."';";
-		$registrarLastLogin = mysqli_query($mysqli,$query_registrarLastLogin) or die (mysqli_error());
-		//Fin Registra Acceso en BD
-		
-		//Genera Permisos
-		$selecciona_permisos = "select * from permisos where idUsuario='".$fila[0]."';";
-		$iny_selecciona_permisos =  mysqli_query($mysqli,$selecciona_permisos) or die(mysqli_error());
-		$filaPermisos = mysqli_fetch_assoc($iny_selecciona_permisos);
-		$_SESSION['permisos_modulos'] = $filaPermisos;
-		
-		
- 		header('Location: dashboard.php');
-
- 	}else{
- 		header('Location: index.php?alert=1');
- 	}
+		$stmt->close();
+	}else{
+		//No se recibieron datos POST
+		header('Location: index.php');
+	}
+	
  ?>
