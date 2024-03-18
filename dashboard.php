@@ -1,15 +1,16 @@
 <?php
 	session_start(); // crea una sesion
 	error_reporting(E_ALL); ini_set("display_errors", 1);
-	
+
+	//Redirect Denied
+	if(!isset($_SESSION['id_usuario'])){ header("Location: index.php");}
+
 	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
 	include("include/functions.php");
 	
-	if(!isset($_SESSION['id_usuario'])){
-		header("Location: index.php");
-	}
+	
 	$pagina_actual="dashboard";
     date_default_timezone_set('America/Mexico_City');
     setlocale(LC_ALL, 'es_MX.UTF-8');
