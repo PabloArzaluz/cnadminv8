@@ -33,6 +33,7 @@
 	<?php
 		include("include/head.php");
 	?>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <style>
         .tabla-prestamos{
 
@@ -80,7 +81,24 @@
             color:#009E24;
         }
 </style>
-
+<script>
+    $( document ).ready(function() {
+        $('input[type="file"]').on('change', function(){
+            var ext = $( this ).val().split('.').pop();
+            if ($( this ).val() != '') {
+                if(ext == "pdf"){
+                    if($(this)[0].files[0].size > 2097152){
+                        alert("Se solicita un archivo no mayor a 2MB. Por favor verifica");
+                        $(this).val('');
+                    }
+                }else{
+                    $( this ).val('');
+                    alert("Extensión no permitida: " + ext);
+                }
+            }
+        });
+    });
+</script>
 </head>
 
 <body class="sidebar-fixed topnav-fixed">
@@ -539,7 +557,7 @@
                                                     <form action="carga_archivos_adicionales_credito.php" method="post" enctype="multipart/form-data">
                                                         <input class="form-control" type="text" name="descripcion" required placeholder="Descripcion"><br><br>
                                                         <input type="hidden" name="id-credito" value="<?php echo $id_credito; ?>">
-                                                        <input type="file" id="myFile" name="archivo" required><br>
+                                                        <input type="file" accept="application/pdf" id="files_adicionales" name="archivo" required><br>
                                                         <button type="submit" class="btn btn-success"><i class="fa fa-check-circle"></i> Subir Archivo</button>
                                                     </form>
 												</div>
