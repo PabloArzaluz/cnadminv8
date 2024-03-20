@@ -4,6 +4,7 @@
 	include("include/configuration.php");
 	include("conf/conecta.inc.php");
 	include("conf/config.inc.php");
+	include("include/functions.php");
 	
 	if(validarAccesoModulos('permiso_inversionistas_cambiar_credito') != 1) {
 		header("Location: dashboard.php");
