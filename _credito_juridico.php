@@ -44,7 +44,7 @@
 
 		//Al final modificar estatus del credito
 		$query_update_credito = "UPDATE creditos SET status='3' WHERE id_creditos = '$id_credito';";
-		$ini_query_agregar_juridico = mysqli_query($query_update_credito,$link) or die(mysqli_error());
+		$ini_query_agregar_juridico = mysqli_query($mysqli,$query_update_credito) or die(mysqli_error());
 	}
 	
 	//Tipo de OPeracion // editar Juridico
