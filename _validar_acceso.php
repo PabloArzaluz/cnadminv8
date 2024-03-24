@@ -18,7 +18,6 @@
 		$username = preg_replace('([^A-Za-z0-9])', '', $username_to_validate);
 		
 		//$contraseña= md5($pass);
-	
 		//procedural 
 		$mysqliConnProc   = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
 		$stmt = $mysqliConnProc->prepare("SELECT id_user,level,nombre,accesoAdministrativo from usuario where username=? and password = ? and status=1 limit 1");
